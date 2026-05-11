@@ -1,0 +1,987 @@
+<!--github.io/index.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BTL Management System - Audit Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* ========== LOGIN PAGE STYLES ========== */
+        .login-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .login-header {
+            background: #1a73e8;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .login-form {
+            padding: 30px;
+        }
+
+        /* ========== DASHBOARD STYLES ========== */
+        .dashboard-container {
+            display: none;
+        }
+
+        .dashboard-header {
+            background: #1a73e8;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .filter-item input, .filter-item select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Requisitions Table */
+        .requisitions-container {
+            background: white;
+            border-radius: 10px;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #e9ecef;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Common Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1a73e8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .audit-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .audit-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .audit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .audit-btn-secondary {
+            background: #6c757d;
+        }
+
+        .audit-btn-success {
+            background: #28a745;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+        }
+
+        .close {
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filter-group {
+                flex-direction: column;
+            }
+            
+            .filter-item {
+                width: 100%;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>BTL Management System</h1>
+                <p>Audit Portal Login</p>
+            </div>
+            <div class="login-form">
+                <div class="error-message" id="loginError"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="audit-btn" style="width: 100%; padding: 12px;">Login</button>
+                </form>
+                <div class="loading" id="loginLoading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 10px; color: #666;">Authenticating...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>🏪 BTL Management System - Audit Dashboard</h1>
+            <div class="user-info">
+                <span id="userName"></span>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="filters">
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <label>🔍 Search Requisition ID / Shop Name</label>
+                        <input type="text" id="searchInput" placeholder="Type to search...">
+                    </div>
+                    <div class="filter-item">
+                        <label>📊 Execution Status</label>
+                        <select id="statusFilter">
+                            <option value="">All</option>
+                            <option value="Design Phase">Design Phase</option>
+                            <option value="Initial Phase">Initial Phase</option>
+                            <option value="Middle Phase">Middle Phase</option>
+                            <option value="Final Phase">Final Phase</option>
+                            <option value="Executed">Executed</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>✅ Audit Status</label>
+                        <select id="auditFilter">
+                            <option value="">All</option>
+                            <option value="pending_pre">Pending Pre-Audit</option>
+                            <option value="completed_pre">Pre-Audit Completed</option>
+                            <option value="pending_post">Pending Post-Audit</option>
+                            <option value="completed_post">Post-Audit Completed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="requisitions-container">
+                <div id="requisitionsTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading requisitions...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Modal -->
+    <div id="auditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Submit Audit</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="auditForm">
+                <div class="form-group">
+                    <label>📋 Requisition ID</label>
+                    <input type="text" id="auditRequisitionId" readonly>
+                </div>
+                <div class="form-group">
+                    <label>🏪 Shop Name</label>
+                    <input type="text" id="auditShopName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>⭐ Feedback *</label>
+                    <select id="auditFeedback" required>
+                        <option value="">Select Feedback</option>
+                        <option value="Approved">✅ Approved</option>
+                        <option value="Approved with Comments">📝 Approved with Comments</option>
+                        <option value="Needs Revision">🔄 Needs Revision</option>
+                        <option value="Rejected">❌ Rejected</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>📝 Description / Comments</label>
+                    <textarea id="auditDescription" placeholder="Enter detailed description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>📸 Upload Image</label>
+                    <input type="file" id="auditImage" accept="image/*">
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="">
+                    </div>
+                </div>
+                <button type="submit" class="audit-btn" style="width: 100%;">📤 Submit Audit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        // IMPORTANT: Replace this URL with your Apps Script Web App URL after deployment
+        const API_URL = "https://script.google.com/macros/s/AKfycbyIs1_c2vHLcZzpUS8mV1fmsBTOA1uHse4qg_mdpxMPacLV6QLKlZkIRGbi58P8jxPs/exec";
+        
+        // Global variables
+        let currentRequisitions = [];
+        let currentAuditType = null;
+        let currentRequisition = null;
+        let sortColumn = '';
+        let sortDirection = 'asc';
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString();
+            } catch(e) {
+                return dateString;
+            }
+        }
+
+        // ==================== AUTHENTICATION FUNCTIONS ====================
+        function checkAuth() {
+            const token = localStorage.getItem('btl_token');
+            if (!token) {
+                showPage('login');
+                return false;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
+            if (user.role !== 'Audit') {
+                alert('Access denied. Audit role required.');
+                logout();
+                return false;
+            }
+            
+            document.getElementById('userName').textContent = `👋 Welcome, ${user.fullName || user.email}`;
+            showPage('dashboard');
+            loadRequisitions();
+            return true;
+        }
+
+        // FIXED: Using GET method to avoid CORS issues
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            const loginForm = document.getElementById('loginForm');
+            const loginLoading = document.getElementById('loginLoading');
+            
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            loginForm.style.display = 'none';
+            loginLoading.style.display = 'block';
+            
+            try {
+                // Use GET method with URL parameters to avoid CORS preflight
+                const url = `${API_URL}?path=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+                console.log('Attempting login to:', url);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    localStorage.setItem('btl_token', data.token);
+                    localStorage.setItem('btl_user', JSON.stringify(data.user));
+                    checkAuth();
+                } else {
+                    errorDiv.textContent = data.error || 'Login failed. Please check your credentials.';
+                    errorDiv.style.display = 'block';
+                    loginForm.style.display = 'block';
+                    loginLoading.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Login error details:', error);
+                errorDiv.textContent = 'Network error: ' + error.message + '. Please check your connection and Apps Script URL.';
+                errorDiv.style.display = 'block';
+                loginForm.style.display = 'block';
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('btl_token');
+            localStorage.removeItem('btl_user');
+            showPage('login');
+            document.getElementById('loginForm').reset();
+        }
+
+        function showPage(page) {
+            const loginPage = document.getElementById('loginPage');
+            const dashboardPage = document.getElementById('dashboardPage');
+            
+            if (page === 'login') {
+                loginPage.style.display = 'flex';
+                dashboardPage.style.display = 'none';
+            } else {
+                loginPage.style.display = 'none';
+                dashboardPage.style.display = 'block';
+            }
+        }
+
+        // ==================== REQUISITION FUNCTIONS ====================
+        async function loadRequisitions() {
+            const token = localStorage.getItem('btl_token');
+            const tableContainer = document.getElementById('requisitionsTable');
+            
+            tableContainer.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading requisitions...</p>
+                </div>
+            `;
+            
+            try {
+                // Use GET method for better CORS compatibility
+                const response = await fetch(`${API_URL}?path=getRequisitions&token=${encodeURIComponent(token)}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    if (data.error === 'Unauthorized') {
+                        logout();
+                    }
+                    throw new Error(data.error);
+                }
+                
+                currentRequisitions = data.requisitions || [];
+                applyFilters();
+                
+            } catch (error) {
+                console.error('Error loading requisitions:', error);
+                tableContainer.innerHTML = `
+                    <div class="no-data">
+                        <p>❌ Error loading requisitions: ${error.message}</p>
+                        <button onclick="loadRequisitions()" class="audit-btn">🔄 Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const auditFilter = document.getElementById('auditFilter').value;
+            
+            let filtered = currentRequisitions.filter(req => {
+                // Search filter
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && 
+                    !req.Shop_Name?.toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+                
+                // Status filter
+                if (statusFilter && req.Execution_Status !== statusFilter) {
+                    return false;
+                }
+                
+                // Audit filter
+                if (auditFilter) {
+                    const hasPreAudit = req.Pre_Audit_FeedBack && req.Pre_Audit_FeedBack !== '';
+                    const hasPostAudit = req.Post_Audit_FeedBack && req.Post_Audit_FeedBack !== '';
+                    
+                    switch(auditFilter) {
+                        case 'pending_pre':
+                            if (hasPreAudit || !req.canPreAudit) return false;
+                            break;
+                        case 'completed_pre':
+                            if (!hasPreAudit) return false;
+                            break;
+                        case 'pending_post':
+                            if (hasPostAudit || !req.canPostAudit) return false;
+                            break;
+                        case 'completed_post':
+                            if (!hasPostAudit) return false;
+                            break;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Apply sorting
+            if (sortColumn) {
+                filtered.sort((a, b) => {
+                    let valA = a[sortColumn] || '';
+                    let valB = b[sortColumn] || '';
+                    
+                    if (sortDirection === 'asc') {
+                        return valA > valB ? 1 : -1;
+                    } else {
+                        return valA < valB ? 1 : -1;
+                    }
+                });
+            }
+            
+            renderTable(filtered);
+        }
+
+        function sortBy(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            applyFilters();
+        }
+
+        function renderTable(requisitions) {
+            const tableContainer = document.getElementById('requisitionsTable');
+            
+            if (!requisitions || requisitions.length === 0) {
+                tableContainer.innerHTML = `
+                    <div class="no-data">
+                        <p>📭 No requisitions found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th onclick="sortBy('Requisition_ID')">📋 Requisition ID ${sortColumn === 'Requisition_ID' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                            <th onclick="sortBy('Shop_Name')">🏪 Shop Name ${sortColumn === 'Shop_Name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                            <th onclick="sortBy('Brand')">🏷️ Brand ${sortColumn === 'Brand' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                            <th onclick="sortBy('Region')">📍 Region ${sortColumn === 'Region' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                            <th onclick="sortBy('Execution_Status')">⚙️ Execution Status ${sortColumn === 'Execution_Status' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                            <th>🔍 Pre-Audit</th>
+                            <th>✅ Post-Audit</th>
+                            <th>🎯 Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            requisitions.forEach(req => {
+                const preAuditStatus = req.Pre_Audit_FeedBack ? '✅ Completed' : (req.canPreAudit ? '⏳ Pending' : '🚫 Not Available');
+                const postAuditStatus = req.Post_Audit_FeedBack ? '✅ Completed' : '⏳ Pending';
+                
+                const preAuditClass = req.Pre_Audit_FeedBack ? 'badge-success' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
+                const postAuditClass = req.Post_Audit_FeedBack ? 'badge-success' : 'badge-warning';
+                
+                html += `
+                    <tr>
+                        <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                        <td>${escapeHtml(req.Shop_Name || '')}</td>
+                        <td>${escapeHtml(req.Brand || '')}</td>
+                        <td>${escapeHtml(req.Region || '')}</td>
+                        <td><span class="audit-badge badge-info">${escapeHtml(req.Execution_Status || '')}</span></td>
+                        <td><span class="audit-badge ${preAuditClass}">${preAuditStatus}</span></td>
+                        <td><span class="audit-badge ${postAuditClass}">${postAuditStatus}</span></td>
+                        <td>
+                `;
+                
+                if (req.canPreAudit && !req.Pre_Audit_FeedBack) {
+                    html += `<button class="audit-btn" onclick="openAuditModal('${req.Requisition_ID}', 'pre')">📝 Pre-Audit</button>`;
+                }
+                
+                if (req.canPostAudit && !req.Post_Audit_FeedBack) {
+                    html += `<button class="audit-btn audit-btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')">📋 Post-Audit</button>`;
+                }
+                
+                if ((req.Pre_Audit_FeedBack || req.Post_Audit_FeedBack)) {
+                    html += `<button class="audit-btn audit-btn-success" onclick="viewAudit('${req.Requisition_ID}')">👁️ View</button>`;
+                }
+                
+                html += `</td></tr>`;
+            });
+            
+            html += `</tbody></table>`;
+            tableContainer.innerHTML = html;
+        }
+
+        // ==================== AUDIT FUNCTIONS ====================
+        function openAuditModal(requisitionId, type) {
+            const req = currentRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            currentAuditType = type;
+            currentRequisition = req;
+            
+            document.getElementById('modalTitle').textContent = type === 'pre' ? '📝 Pre-Audit Form' : '📋 Post-Audit Form';
+            document.getElementById('auditRequisitionId').value = req.Requisition_ID;
+            document.getElementById('auditShopName').value = req.Shop_Name;
+            document.getElementById('auditFeedback').value = '';
+            document.getElementById('auditDescription').value = '';
+            document.getElementById('auditImage').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            
+            document.getElementById('auditModal').style.display = 'block';
+        }
+
+        async function submitAudit(event) {
+            event.preventDefault();
+            
+            const token = localStorage.getItem('btl_token');
+            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
+            const feedback = document.getElementById('auditFeedback').value;
+            const description = document.getElementById('auditDescription').value;
+            const imageFile = document.getElementById('auditImage').files[0];
+            
+            if (!feedback) {
+                alert('Please select feedback');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ Submitting...';
+            submitBtn.disabled = true;
+            
+            try {
+                let imageUrl = null;
+                
+                // Upload image if provided
+                if (imageFile) {
+                    const reader = new FileReader();
+                    const imageData = await new Promise((resolve) => {
+                        reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                        reader.readAsDataURL(imageFile);
+                    });
+                    
+                    // Use POST for image upload (larger data)
+                    const uploadResponse = await fetch(`${API_URL}?path=uploadImage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            token: token,
+                            imageData: imageData,
+                            fileName: imageFile.name,
+                            requisitionId: currentRequisition.Requisition_ID,
+                            auditType: currentAuditType
+                        })
+                    });
+                    
+                    const uploadData = await uploadResponse.json();
+                    if (uploadData.success) {
+                        imageUrl = uploadData.imageUrl;
+                    }
+                }
+                
+                // Submit audit data using GET for better CORS compatibility
+                const endpoint = currentAuditType === 'pre' ? 'submitPreAudit' : 'submitPostAudit';
+                const params = new URLSearchParams({
+                    path: endpoint,
+                    token: token,
+                    requisitionId: currentRequisition.Requisition_ID,
+                    feedback: feedback,
+                    description: description,
+                    imageUrl: imageUrl || '',
+                    auditorEmail: user.email
+                });
+                
+                const response = await fetch(`${API_URL}?${params.toString()}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ ${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
+                    closeModal();
+                    loadRequisitions();
+                } else {
+                    alert('❌ Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+                console.error('Submit error:', error);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function viewAudit(requisitionId) {
+            const token = localStorage.getItem('btl_token');
+            
+            try {
+                const response = await fetch(`${API_URL}?path=getAuditData&token=${encodeURIComponent(token)}&requisitionId=${encodeURIComponent(requisitionId)}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.auditData) {
+                    let message = '📋 AUDIT DETAILS\n\n';
+                    
+                    if (data.auditData.preAudit.feedback) {
+                        message += '🔍 PRE-AUDIT:\n';
+                        message += `   Feedback: ${data.auditData.preAudit.feedback}\n`;
+                        message += `   Description: ${data.auditData.preAudit.description || 'N/A'}\n`;
+                        message += `   Date: ${formatDate(data.auditData.preAudit.date)}\n`;
+                        message += `   Auditor: ${data.auditData.preAudit.auditorEmail || 'N/A'}\n`;
+                        if (data.auditData.preAudit.imageUrl) {
+                            message += `   Image: ${data.auditData.preAudit.imageUrl}\n`;
+                        }
+                        message += '\n';
+                    }
+                    
+                    if (data.auditData.postAudit.feedback) {
+                        message += '✅ POST-AUDIT:\n';
+                        message += `   Feedback: ${data.auditData.postAudit.feedback}\n`;
+                        message += `   Description: ${data.auditData.postAudit.description || 'N/A'}\n`;
+                        message += `   Date: ${formatDate(data.auditData.postAudit.date)}\n`;
+                        message += `   Auditor: ${data.auditData.postAudit.auditorEmail || 'N/A'}\n`;
+                        if (data.auditData.postAudit.imageUrl) {
+                            message += `   Image: ${data.auditData.postAudit.imageUrl}\n`;
+                        }
+                    }
+                    
+                    if (message === '📋 AUDIT DETAILS\n\n') {
+                        message = 'No audit data available for this requisition.';
+                    }
+                    
+                    alert(message);
+                } else {
+                    alert('No audit data found');
+                }
+            } catch (error) {
+                alert('Error loading audit data: ' + error.message);
+            }
+        }
+
+        // Image preview
+        document.getElementById('auditImage').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('auditModal').style.display = 'none';
+            document.getElementById('auditForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('auditForm').addEventListener('submit', submitAudit);
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('auditFilter').addEventListener('change', applyFilters);
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('auditModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Initialize application
+        checkAuth();
+    </script>
+</body>
+</html>
