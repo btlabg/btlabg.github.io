@@ -3,591 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BTL Management System - Audit Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
+    <title>BTL Management System - AkijBashir Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        /* Login Page */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            width: 100%;
-            max-width: 420px;
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-header {
-            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .login-header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .login-form {
-            padding: 30px;
-        }
-
-        /* Dashboard */
-        .dashboard-container {
-            display: none;
-            background: #f0f2f5;
-            min-height: 100vh;
-        }
-
-        .dashboard-header {
-            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-            color: white;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .dashboard-header h1 {
-            font-size: 22px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 20px;
-            border-radius: 50px;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .main-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Filters */
-        .filters {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .filter-item {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .filter-item label {
-            display: block;
-            margin-bottom: 8px;
-            color: #374151;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .filter-item input, .filter-item select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .filter-item input:focus, .filter-item select:focus {
-            outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
-        }
-
-        /* Stats Cards */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-        }
-
-        .stat-info h3 {
-            font-size: 12px;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .stat-info .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        /* Requisitions Table */
-        .requisitions-container {
-            background: white;
-            border-radius: 16px;
-            overflow-x: auto;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
-
-        th {
-            background: #f9fafb;
-            padding: 15px 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            border-bottom: 2px solid #e5e7eb;
-            cursor: pointer;
-            user-select: none;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        th:hover {
-            background: #f3f4f6;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        /* Badges */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .badge-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-warning {
-            background: #fed7aa;
-            color: #92400e;
-        }
-
-        .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-primary {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            margin: 2px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary {
-            background: #1a73e8;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1557b0;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: white;
-            border: 2px solid #1a73e8;
-            color: #1a73e8;
-        }
-
-        .btn-outline:hover {
-            background: #1a73e8;
-            color: white;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-            font-size: 13px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: white;
-            max-width: 800px;
-            width: 90%;
-            margin: 50px auto;
-            border-radius: 24px;
-            padding: 30px;
-            animation: modalSlideIn 0.3s ease-out;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .modal-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .close {
-            font-size: 32px;
-            cursor: pointer;
-            color: #9ca3af;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #1f2937;
-        }
-
-        /* Details Grid */
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-        }
-
-        .detail-item {
-            background: #f9fafb;
-            padding: 12px 15px;
-            border-radius: 12px;
-        }
-
-        .detail-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #6b7280;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .detail-value {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1f2937;
-            word-break: break-word;
-        }
-
-        .image-preview {
-            max-width: 200px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .image-preview img {
-            max-width: 100%;
-            border-radius: 12px;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 60px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e5e7eb;
-            border-top-color: #1a73e8;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 60px;
-            color: #6b7280;
-        }
-
-        /* Responsive */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-size: 14px; }
+        
+        .login-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 16px; }
+        .login-box { background: rgba(255,255,255,0.98); border-radius: 20px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2); overflow: hidden; width: 100%; max-width: 380px; animation: fadeInUp 0.5s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .login-header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; padding: 32px 24px; text-align: center; }
+        .login-header h1 { font-size: 22px; margin-bottom: 8px; font-weight: 600; }
+        .login-header p { font-size: 12px; opacity: 0.85; }
+        .login-form { padding: 24px; }
+        
+        .dashboard-container { display: none; background: #f0f2f5; min-height: 100vh; flex-direction: column; }
+        .dashboard-header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .dashboard-header h1 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .user-info { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.12); padding: 6px 16px; border-radius: 40px; font-size: 13px; }
+        .logout-btn { background: rgba(255,255,255,0.15); color: white; border: none; padding: 6px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s ease; }
+        .logout-btn:hover { background: rgba(255,255,255,0.25); }
+        
+        .main-content { flex: 1; padding: 80px 20px 20px 20px; }
+        .main-container { max-width: 1600px; margin: 0 auto; }
+        
+        .dashboard-footer { background: #1f2937; color: #9ca3af; padding: 12px 24px; text-align: center; position: fixed; bottom: -60px; left: 0; right: 0; z-index: 99; transition: bottom 0.3s ease; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); font-size: 12px; }
+        .dashboard-footer.visible { bottom: 0; }
+        .footer-content { max-width: 1600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .developer-credit { display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s ease; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); font-size: 11px; }
+        .developer-credit:hover { background: rgba(255,255,255,0.1); }
+        .developer-name { color: #fbbf24; font-weight: 600; cursor: pointer; }
+        
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 14px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; transition: transform 0.2s ease; cursor: pointer; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .stat-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .stat-info h3 { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+        .stat-info .stat-number { font-size: 22px; font-weight: 700; color: #1f2937; }
+        
+        .filters { background: white; padding: 14px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-item { flex: 1; min-width: 150px; }
+        .filter-item label { display: block; margin-bottom: 5px; color: #374151; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .filter-item input, .filter-item select { width: 100%; padding: 7px 10px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 12px; font-family: inherit; }
+        .filter-item input:focus, .filter-item select:focus { outline: none; border-color: #1a73e8; }
+        
+        .requisitions-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1100px; }
+        .data-table th { background: #f8f9fa; padding: 10px 8px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; white-space: nowrap; cursor: pointer; }
+        .data-table th:hover { background: #e5e7eb; }
+        .data-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        .data-table tr:hover { background: #f8f9fa; }
+        
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fed7aa; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-primary { background: #e0e7ff; color: #3730a3; }
+        
+        .btn { padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; margin: 1px; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; }
+        .btn-primary { background: #1a73e8; color: white; }
+        .btn-primary:hover { background: #1557b0; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-outline { background: white; border: 1px solid #1a73e8; color: #1a73e8; }
+        .btn-outline:hover { background: #1a73e8; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-success { background: #10b981; color: white; }
+        
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 12px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 10px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 13px; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #1a73e8; }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; overflow-y: auto; }
+        .modal-content { background: white; max-width: 700px; width: 90%; margin: 60px auto; border-radius: 20px; padding: 24px; animation: modalSlideIn 0.2s ease-out; }
+        .modal-content.large { max-width: 900px; }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1.5px solid #e5e7eb; }
+        .modal-header h2 { font-size: 20px; font-weight: 600; color: #1f2937; }
+        .close { font-size: 28px; cursor: pointer; color: #9ca3af; line-height: 1; }
+        .close:hover { color: #1f2937; }
+        
+        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; max-height: 55vh; overflow-y: auto; }
+        .detail-item { background: #f9fafb; padding: 10px 12px; border-radius: 10px; }
+        .detail-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-bottom: 4px; }
+        .detail-value { font-size: 12px; font-weight: 500; color: #1f2937; word-break: break-word; }
+        .audit-card { background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .audit-card h4 { margin-bottom: 12px; color: #1a73e8; }
+        .audit-image { max-width: 200px; margin-top: 10px; border-radius: 8px; }
+        .image-preview { max-width: 150px; margin-top: 8px; display: none; }
+        .image-preview img { max-width: 100%; border-radius: 10px; }
+        
+        .loading { text-align: center; padding: 40px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #e5e7eb; border-top-color: #1a73e8; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .no-data { text-align: center; padding: 40px; color: #6b7280; }
+        
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .filter-item {
-                min-width: 100%;
-            }
-            
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 20px auto;
-                padding: 20px;
-            }
-            
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            th, td {
-                padding: 8px;
-                font-size: 12px;
-            }
-            
-            .btn {
-                padding: 4px 10px;
-                font-size: 11px;
-            }
+            .dashboard-header { flex-direction: column; text-align: center; padding: 12px 16px; }
+            .filters { flex-direction: column; gap: 10px; }
+            .filter-item { min-width: 100%; }
+            .stats-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .main-content { padding: 110px 16px 16px 16px; }
         }
-
         @media (max-width: 480px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .dashboard-header h1 {
-                font-size: 18px;
-            }
+            .stats-container { grid-template-columns: 1fr; }
+            .btn { padding: 3px 6px; font-size: 10px; }
         }
     </style>
 </head>
 <body>
-    <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <div class="login-box">
             <div class="login-header">
-                <h1><i class="fas fa-clipboard-list"></i> BTL Management System</h1>
-                <p>Audit Portal Login</p>
+                <h1><i class="fas fa-clipboard-list"></i> BTL Management System - AkijBashir Group</h1>
+                <p>Login to your account</p>
             </div>
             <div class="login-form">
-                <div class="error-message" id="loginError" style="display: none;"></div>
+                <div class="error-message" id="loginError" style="display: none; background: #fee; color: #c33; padding: 10px; border-radius: 8px; margin-bottom: 16px;"></div>
                 <form id="loginForm">
                     <div class="form-group">
-                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <label><i class="fas fa-envelope"></i> Email</label>
                         <input type="email" id="email" required placeholder="Enter your email">
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-lock"></i> Password</label>
                         <input type="password" id="password" required placeholder="Enter your password">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px;">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
                 </form>
@@ -599,10 +147,9 @@
         </div>
     </div>
 
-    <!-- Dashboard Page -->
     <div id="dashboardPage" class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-chart-line"></i> BTL Management System - Audit Dashboard</h1>
+            <h1><i class="fas fa-chart-line"></i> BTL Management System - AkijBashir Group</h1>
             <div class="user-info">
                 <i class="fas fa-user-circle"></i>
                 <span id="userName"></span>
@@ -610,64 +157,187 @@
             </div>
         </div>
 
-        <div class="main-container">
-            <!-- Stats Cards -->
-            <div class="stats-container" id="statsContainer"></div>
+        <div class="main-content">
+            <div class="main-container">
+                <!-- Audit Dashboard Content -->
+                <div id="auditContent">
+                    <div class="stats-container" id="statsContainer"></div>
+                    <div class="filters">
+                        <div class="filter-item">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" id="searchInput" placeholder="ID / Shop...">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> FY</label>
+                            <select id="fyFilter"><option value="">All FY</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select id="typeFilter"><option value="">All Types</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-chart-simple"></i> Execution Status</label>
+                            <select id="statusFilter"><option value="">All</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-check-circle"></i> Audit Filter</label>
+                            <select id="auditFilter">
+                                <option value="">All</option>
+                                <option value="pending_pre">Pending Pre-Audit</option>
+                                <option value="completed_pre">Pre-Audit Completed</option>
+                                <option value="pending_post">Pending Post-Audit</option>
+                                <option value="completed_post">Post-Audit Completed</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="requisitions-container">
+                        <div id="requisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+                    </div>
+                </div>
 
-            <!-- Filters -->
-            <div class="filters">
-                <div class="filter-item">
-                    <label><i class="fas fa-search"></i> Search</label>
-                    <input type="text" id="searchInput" placeholder="Requisition ID / Shop Name...">
-                </div>
-                <div class="filter-item">
-                    <label><i class="fas fa-calendar"></i> FY (Financial Year)</label>
-                    <select id="fyFilter">
-                        <option value="">All FY</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label><i class="fas fa-tag"></i> Type</label>
-                    <select id="typeFilter">
-                        <option value="">All Types</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label><i class="fas fa-chart-simple"></i> Execution Status</label>
-                    <select id="statusFilter">
-                        <option value="">All</option>
-                        <option value="Design Phase">Design Phase</option>
-                        <option value="Initial Phase">Initial Phase</option>
-                        <option value="Middle Phase">Middle Phase</option>
-                        <option value="Final Phase">Final Phase</option>
-                        <option value="Executed">Executed</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label><i class="fas fa-check-circle"></i> Audit Status</label>
-                    <select id="auditFilter">
-                        <option value="">All</option>
-                        <option value="pending_pre">Pending Pre-Audit</option>
-                        <option value="completed_pre">Pre-Audit Completed</option>
-                        <option value="pending_post">Pending Post-Audit</option>
-                        <option value="completed_post">Post-Audit Completed</option>
-                    </select>
+                <!-- Marketing Dashboard Content -->
+                <div id="marketingContent" style="display: none;">
+                    <div class="stats-container" id="marketingStatsContainer"></div>
+                    <div class="filters">
+                        <div class="filter-item">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" id="marketingSearchInput" placeholder="ID / Shop...">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> FY</label>
+                            <select id="marketingFyFilter"><option value="">All FY</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select id="marketingTypeFilter"><option value="">All Types</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-chart-simple"></i> Execution Status</label>
+                            <select id="marketingStatusFilter"><option value="">All</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-check-circle"></i> Audit Filter</label>
+                            <select id="marketingAuditFilter">
+                                <option value="">All</option>
+                                <option value="pending_revisions">Pending Revisions</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="requisitions-container">
+                        <div id="marketingRequisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Requisitions Table -->
-            <div class="requisitions-container">
-                <div id="requisitionsTable">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Loading requisitions...</p>
-                    </div>
+        <div class="dashboard-footer" id="dashboardFooter">
+            <div class="footer-content">
+                <div><i class="fas fa-copyright"></i> 2026 AkijBashir Group</div>
+                <div class="developer-credit" onclick="showDeveloperInfo()">
+                    <i class="fas fa-code"></i>
+                    <span>Developed by <span class="developer-name" id="developerName">Loading...</span></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Audit Modal -->
+    <!-- Edit Requisition Modal (Marketing) -->
+    <div id="editModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Requisition</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editRequisitionId">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+                    <div class="form-group"><label>Brand</label><input type="text" id="editBrand"></div>
+                    <div class="form-group"><label>Type</label><input type="text" id="editType"></div>
+                    <div class="form-group"><label>Job Type</label><input type="text" id="editJobType"></div>
+                    <div class="form-group"><label>Item Type</label><input type="text" id="editItemType"></div>
+                    <div class="form-group"><label>Request For</label><input type="text" id="editRequestFor"></div>
+                    <div class="form-group"><label>Remarks</label><textarea id="editRemarks" rows="2"></textarea></div>
+                    <div class="form-group"><label>Req Date</label><input type="date" id="editReqDate"></div>
+                    <div class="form-group"><label>Requisition By</label><input type="text" id="editRequisitionBy"></div>
+                    <div class="form-group"><label>Designation</label><input type="text" id="editDesignation"></div>
+                    <div class="form-group"><label>Region</label><input type="text" id="editRegion"></div>
+                    <div class="form-group"><label>Area</label><input type="text" id="editArea"></div>
+                    <div class="form-group"><label>Territory</label><input type="text" id="editTerritory"></div>
+                    <div class="form-group"><label>Shop Name</label><input type="text" id="editShopName"></div>
+                    <div class="form-group"><label>Address</label><textarea id="editAddress" rows="2"></textarea></div>
+                    <div class="form-group"><label>Mobile Number</label><input type="text" id="editMobileNumber"></div>
+                    <div class="form-group"><label>Length</label><input type="text" id="editLength"></div>
+                    <div class="form-group"><label>Height</label><input type="text" id="editHeight"></div>
+                    <div class="form-group"><label>Quantity</label><input type="text" id="editQuantity"></div>
+                    <div class="form-group"><label>Estimated Cost</label><input type="text" id="editEstimatedCost"></div>
+                    <div class="form-group"><label>Workorder No</label><input type="text" id="editWorkorderNo"></div>
+                    <div class="form-group"><label>Expected Handover Date</label><input type="date" id="editExpectedHandoverDate"></div>
+                    <div class="form-group"><label>Execution Start Date</label><input type="date" id="editExecutionStartDate"></div>
+                    <div class="form-group"><label>Execution End Date</label><input type="date" id="editExecutionEndDate"></div>
+                    <div class="form-group"><label>ROI</label><input type="text" id="editROI"></div>
+                    <div class="form-group"><label>Executing Party</label><input type="text" id="editExecutingParty"></div>
+                    <div class="form-group"><label>Billing Date</label><input type="date" id="editBillingDate"></div>
+                    <div class="form-group"><label>MKT Status</label><select id="editMKTStatus"><option value="">Select</option><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Audit Resolution Modal (Marketing) -->
+    <div id="resolutionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="resolutionTitle"><i class="fas fa-check-circle"></i> Submit Resolution</h2>
+                <span class="close" onclick="closeResolutionModal()">&times;</span>
+            </div>
+            <form id="resolutionForm">
+                <input type="hidden" id="resolutionRequisitionId">
+                <input type="hidden" id="resolutionAuditType">
+                <div class="form-group">
+                    <label>Resolution / Feedback</label>
+                    <textarea id="resolutionText" rows="4" placeholder="Enter your resolution or feedback..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Upload Supporting Image</label>
+                    <input type="file" id="resolutionImage" accept="image/*">
+                    <div class="image-preview" id="resolutionImagePreview">
+                        <img id="resolutionPreviewImg" src="">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Resolution</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Audit Modal -->
+    <div id="viewAuditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-eye"></i> Audit Details</h2>
+                <span class="close" onclick="closeViewAuditModal()">&times;</span>
+            </div>
+            <div id="viewAuditContent"></div>
+        </div>
+    </div>
+
+    <!-- View Resolution Modal (Audit) -->
+    <div id="viewResolutionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-check-double"></i> Resolution Details</h2>
+                <span class="close" onclick="closeViewResolutionModal()">&times;</span>
+            </div>
+            <div id="viewResolutionContent"></div>
+        </div>
+    </div>
+
+    <!-- Audit Modal (Audit) -->
     <div id="auditModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -675,80 +345,121 @@
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
             <form id="auditForm">
-                <div class="form-group">
-                    <label><i class="fas fa-hashtag"></i> Requisition ID</label>
-                    <input type="text" id="auditRequisitionId" readonly>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-store"></i> Shop Name</label>
-                    <input type="text" id="auditShopName" readonly>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-star"></i> Feedback *</label>
-                    <select id="auditFeedback" required>
-                        <option value="">Select Feedback</option>
-                        <option value="Approved">✅ Approved</option>
-                        <option value="Approved with Comments">📝 Approved with Comments</option>
-                        <option value="Needs Revision">🔄 Needs Revision</option>
-                        <option value="Rejected">❌ Rejected</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-comment"></i> Description / Comments</label>
-                    <textarea id="auditDescription" placeholder="Enter detailed description..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-camera"></i> Upload Image</label>
-                    <input type="file" id="auditImage" accept="image/*">
-                    <div class="image-preview" id="imagePreview">
-                        <img id="previewImg" src="">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
-                    <i class="fas fa-paper-plane"></i> Submit Audit
-                </button>
+                <div class="form-group"><label>Requisition ID</label><input type="text" id="auditRequisitionId" readonly></div>
+                <div class="form-group"><label>Shop Name</label><input type="text" id="auditShopName" readonly></div>
+                <div class="form-group"><label>Feedback *</label><select id="auditFeedback" required><option value="">Select Feedback</option><option value="Approved">✅ Approved</option><option value="Approved with Comments">📝 Approved with Comments</option><option value="Needs Revision">🔄 Needs Revision</option><option value="Rejected">❌ Rejected</option></select></div>
+                <div class="form-group"><label>Comments</label><textarea id="auditDescription" placeholder="Enter detailed description..."></textarea></div>
+                <div class="form-group"><label>Upload Image</label><input type="file" id="auditImage" accept="image/*"><div class="image-preview" id="imagePreview"><img id="previewImg" src=""></div></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-paper-plane"></i> Submit</button>
             </form>
         </div>
     </div>
 
     <!-- Details Modal -->
     <div id="detailsModal" class="modal">
-        <div class="modal-content" style="max-width: 1000px;">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
                 <h2><i class="fas fa-info-circle"></i> Requisition Details</h2>
                 <span class="close" onclick="closeDetailsModal()">&times;</span>
             </div>
-            <div id="detailsContent"></div>
+            <div id="detailsContent" class="details-grid"></div>
+        </div>
+    </div>
+
+    <!-- Developer Modal -->
+    <div id="developerModal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-tie"></i> Developer</h2>
+                <span class="close" onclick="closeDeveloperModal()">&times;</span>
+            </div>
+            <div id="developerContent"></div>
         </div>
     </div>
 
     <script>
         // ==================== CONFIGURATION ====================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxlrDezd06lDcQ8LdcnW012rMcXLYivhQk2JraTtLW7Bb4HvR3VW76pWh7a5mJPRCur/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzbHNhPCFoWxTTUiYOM-AF7lB_QL_J0_U-mn6XlD574S5zCB5YnbeWHp0rLhdI6oI-u/exec';
         
         let currentRequisitions = [];
+        let currentMarketingRequisitions = [];
         let currentAuditType = null;
         let currentRequisition = null;
-        let sortColumn = 'Requisition_ID';
-        let sortDirection = 'desc';
+        let auditSortColumn = 'Requisition_ID';
+        let auditSortDirection = 'desc';
+        let marketingSortColumn = 'Requisition_ID';
+        let marketingSortDirection = 'desc';
+        let executionStatusOptions = [];
+        let scrollTimeout = null;
+        let currentUserRole = null;
+        let auditStats = {};
+        let executionStats = {};
 
-        // Helper: make API call
+        // Footer hide/show on scroll
+        function setupScrollListener() {
+            const footer = document.getElementById('dashboardFooter');
+            if (!footer) return;
+            window.addEventListener('scroll', function() {
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+                footer.classList.remove('visible');
+                scrollTimeout = setTimeout(function() { footer.classList.add('visible'); }, 300);
+            });
+            setTimeout(function() { footer.classList.add('visible'); }, 1000);
+        }
+
+        // API call
         async function callAPI(action, data = {}) {
             const token = localStorage.getItem('btl_token');
             if (token) data.token = token;
-            
             const response = await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify({ action: action, data: data })
             });
-            
             return await response.json();
         }
 
-        // Login handler
+        // Developer info
+        async function getDeveloperInfo() {
+            try {
+                const result = await callAPI('getDeveloperInfo', {});
+                return result;
+            } catch (error) {
+                console.error("Error fetching developer info:", error);
+                return null;
+            }
+        }
+
+        async function showDeveloperInfo() {
+            const result = await getDeveloperInfo();
+            if (result && result.success) {
+                const info = result;
+                document.getElementById('developerContent').innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><i class="fas fa-laptop-code" style="font-size:40px;color:white;"></i></div>
+                        <h3 style="margin-bottom:4px;font-size:18px;">${escapeHtml(info.name)}</h3>
+                        <p style="color:#6b7280;margin-bottom:16px;">${escapeHtml(info.role)}</p>
+                        <div style="text-align:left;background:#f9fafb;padding:16px;border-radius:12px;margin-top:16px;">
+                            <p><i class="fas fa-building"></i> <strong>Company:</strong> ${escapeHtml(info.company)}</p>
+                            <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:${escapeHtml(info.email)}">${escapeHtml(info.email)}</a></p>
+                            <p><i class="fas fa-phone"></i> <strong>Mobile:</strong> ${escapeHtml(info.mobile)}</p>
+                            <p><i class="fas fa-globe"></i> <strong>Website:</strong> <a href="${escapeHtml(info.website)}" target="_blank">${escapeHtml(info.website)}</a></p>
+                            <p><i class="fas fa-code-branch"></i> <strong>Version:</strong> ${escapeHtml(info.version)}</p>
+                            <p><i class="fas fa-calendar-alt"></i> <strong>Last Update:</strong> ${escapeHtml(info.lastUpdate)}</p>
+                        </div>
+                        <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e5e7eb;"><p style="font-size:12px;color:#6b7280;">${escapeHtml(info.creditText)} <strong style="color:#1a73e8;">${escapeHtml(info.name)}</strong></p></div>
+                    </div>
+                `;
+                document.getElementById('developerModal').style.display = 'block';
+            } else {
+                alert('Unable to load developer information');
+            }
+        }
+
+        function closeDeveloperModal() { document.getElementById('developerModal').style.display = 'none'; }
+
+        // Login
         async function handleLogin(event) {
             event.preventDefault();
-            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
@@ -760,8 +471,7 @@
             loginLoading.style.display = 'block';
             
             try {
-                const result = await callAPI('login', { email: email, password: password });
-                
+                const result = await callAPI('login', { email, password });
                 if (result.success) {
                     localStorage.setItem('btl_token', result.token);
                     localStorage.setItem('btl_user', JSON.stringify(result.user));
@@ -782,20 +492,31 @@
 
         function checkAuth() {
             const token = localStorage.getItem('btl_token');
-            if (!token) {
-                showPage('login');
-                return false;
-            }
-            
+            if (!token) { showPage('login'); return false; }
             const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
-            if (user.role !== 'Audit') {
-                logout();
-                return false;
-            }
+            currentUserRole = user.role;
             
-            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${user.fullName || user.email}`;
+            if (user.role !== 'Audit' && user.role !== 'Marketing') { logout(); return false; }
+            
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${user.fullName || user.email} (${user.role})`;
+            
+            getDeveloperInfo().then(devInfo => {
+                document.getElementById('developerName').textContent = devInfo && devInfo.success ? devInfo.name : 'Towfik Omor';
+            });
+            
             showPage('dashboard');
-            loadRequisitions();
+            setupScrollListener();
+            
+            if (user.role === 'Audit') {
+                document.getElementById('auditContent').style.display = 'block';
+                document.getElementById('marketingContent').style.display = 'none';
+                loadRequisitions();
+            } else if (user.role === 'Marketing') {
+                document.getElementById('auditContent').style.display = 'none';
+                document.getElementById('marketingContent').style.display = 'block';
+                loadMarketingData();
+                loadMarketingStats();
+            }
             return true;
         }
 
@@ -803,114 +524,88 @@
             localStorage.removeItem('btl_token');
             localStorage.removeItem('btl_user');
             showPage('login');
-            document.getElementById('loginForm').reset();
         }
 
         function showPage(page) {
             const loginPage = document.getElementById('loginPage');
             const dashboardPage = document.getElementById('dashboardPage');
-            
             if (page === 'login') {
                 loginPage.style.display = 'flex';
                 dashboardPage.style.display = 'none';
             } else {
                 loginPage.style.display = 'none';
-                dashboardPage.style.display = 'block';
+                dashboardPage.style.display = 'flex';
             }
         }
 
+        // ==================== AUDIT FUNCTIONS ====================
         async function loadRequisitions() {
             const tableContainer = document.getElementById('requisitionsTable');
-            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading requisitions...</p></div>';
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
             
             try {
                 const result = await callAPI('getRequisitions', {});
-                
                 if (result.error) {
-                    if (result.error === 'Unauthorized') {
-                        logout();
-                    }
+                    if (result.error === 'Unauthorized') logout();
                     throw new Error(result.error);
                 }
-                
                 currentRequisitions = result.requisitions || [];
-                
-                // Populate filter options
-                populateFilterOptions();
-                
-                // Update stats
-                updateStats();
-                
-                // Apply filters
-                applyFilters();
+                executionStatusOptions = result.executionStatuses || [];
+                executionStats = result.executionStats || {};
+                auditStats = result.stats || {};
+                populateAuditFilters();
+                updateAuditStats();
+                applyAuditFilters();
             } catch (error) {
                 tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadRequisitions()" class="btn btn-primary">Retry</button></div>`;
             }
         }
 
-        function populateFilterOptions() {
-            // Populate FY filter
+        function populateAuditFilters() {
+            const statusSelect = document.getElementById('statusFilter');
+            statusSelect.innerHTML = '<option value="">All</option>';
+            executionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
+            
             const fySet = new Set();
-            currentRequisitions.forEach(req => {
-                if (req.ALL_FY) fySet.add(req.ALL_FY);
-            });
+            currentRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
             const fySelect = document.getElementById('fyFilter');
             fySelect.innerHTML = '<option value="">All FY</option>';
-            Array.from(fySet).sort().reverse().forEach(fy => {
-                fySelect.innerHTML += `<option value="${fy}">${fy}</option>`;
-            });
+            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
             
-            // Populate Type filter
             const typeSet = new Set();
-            currentRequisitions.forEach(req => {
-                if (req.Type) typeSet.add(req.Type);
-            });
+            currentRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
             const typeSelect = document.getElementById('typeFilter');
             typeSelect.innerHTML = '<option value="">All Types</option>';
-            Array.from(typeSet).sort().forEach(type => {
-                typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
-            });
+            Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
         }
 
-        function updateStats() {
-            const total = currentRequisitions.length;
-            const pendingPre = currentRequisitions.filter(r => !r.Pre_Audit_FeedBack && r.canPreAudit).length;
-            const pendingPost = currentRequisitions.filter(r => !r.Post_Audit_FeedBack && r.canPostAudit).length;
-            const completed = currentRequisitions.filter(r => r.Pre_Audit_FeedBack || r.Post_Audit_FeedBack).length;
+        function updateAuditStats() {
+            let executionStatsHtml = '';
+            for (const [status, count] of Object.entries(executionStats)) {
+                executionStatsHtml += `<div class="stat-card" onclick="filterByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+            }
             
             document.getElementById('statsContainer').innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="stat-info">
-                        <h3>Total Requisitions</h3>
-                        <div class="stat-number">${total}</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                    <div class="stat-info">
-                        <h3>Pending Pre-Audit</h3>
-                        <div class="stat-number">${pendingPre}</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-                    <div class="stat-info">
-                        <h3>Pending Post-Audit</h3>
-                        <div class="stat-number">${pendingPost}</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-info">
-                        <h3>Audits Completed</h3>
-                        <div class="stat-number">${completed}</div>
-                    </div>
-                </div>
+                <div class="stat-card" onclick="filterByAuditFilter('')"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${auditStats.total || 0}</div></div></div>
+                ${executionStatsHtml}
+                <div class="stat-card" onclick="filterByAuditFilter('pending_pre')"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h3>Pending Pre</h3><div class="stat-number">${auditStats.pendingPre || 0}</div></div></div>
+                <div class="stat-card" onclick="filterByAuditFilter('pending_post')"><div class="stat-icon"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>Pending Post</h3><div class="stat-number">${auditStats.pendingPost || 0}</div></div></div>
+                <div class="stat-card" onclick="filterByAuditFilter('audit_done')"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3>Audit Done</h3><div class="stat-number">${auditStats.auditDone || 0}</div></div></div>
+                <div class="stat-card" onclick="filterByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${auditStats.resolved || 0}</div></div></div>
             `;
         }
 
-        function applyFilters() {
+        function filterByExecutionStatus(status) {
+            document.getElementById('statusFilter').value = status;
+            applyAuditFilters();
+        }
+
+        function filterByAuditFilter(filter) {
+            document.getElementById('auditFilter').value = filter;
+            applyAuditFilters();
+        }
+
+        function applyAuditFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const fyFilter = document.getElementById('fyFilter').value;
             const typeFilter = document.getElementById('typeFilter').value;
@@ -918,171 +613,472 @@
             const auditFilter = document.getElementById('auditFilter').value;
             
             let filtered = currentRequisitions.filter(req => {
-                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && 
-                    !req.Shop_Name?.toLowerCase().includes(searchTerm)) {
-                    return false;
-                }
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
                 if (fyFilter && req.ALL_FY !== fyFilter) return false;
                 if (typeFilter && req.Type !== typeFilter) return false;
                 if (statusFilter && req.Execution_Status !== statusFilter) return false;
                 
-                if (auditFilter) {
-                    const hasPreAudit = req.Pre_Audit_FeedBack && req.Pre_Audit_FeedBack !== '';
-                    const hasPostAudit = req.Post_Audit_FeedBack && req.Post_Audit_FeedBack !== '';
-                    
-                    switch(auditFilter) {
-                        case 'pending_pre':
-                            if (hasPreAudit || !req.canPreAudit) return false;
-                            break;
-                        case 'completed_pre':
-                            if (!hasPreAudit) return false;
-                            break;
-                        case 'pending_post':
-                            if (hasPostAudit || !req.canPostAudit) return false;
-                            break;
-                        case 'completed_post':
-                            if (!hasPostAudit) return false;
-                            break;
-                    }
-                }
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'audit_done' && !req.Pre_Audit_FeedBack && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
                 return true;
             });
             
-            // Apply sorting
             filtered.sort((a, b) => {
-                let valA = a[sortColumn] || '';
-                let valB = b[sortColumn] || '';
-                if (sortDirection === 'asc') {
-                    return valA > valB ? 1 : -1;
-                } else {
-                    return valA < valB ? 1 : -1;
-                }
+                let valA = a[auditSortColumn] || '';
+                let valB = b[auditSortColumn] || '';
+                return auditSortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
             });
             
-            renderTable(filtered);
+            renderAuditTable(filtered);
         }
 
-        function sortBy(column) {
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'asc';
-            }
-            applyFilters();
+        function sortAudit(column) {
+            if (auditSortColumn === column) { auditSortDirection = auditSortDirection === 'asc' ? 'desc' : 'asc'; }
+            else { auditSortColumn = column; auditSortDirection = 'asc'; }
+            applyAuditFilters();
         }
 
-        function renderTable(requisitions) {
+        function renderAuditTable(requisitions) {
             const tableContainer = document.getElementById('requisitionsTable');
+            if (!requisitions.length) { tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No data found</p></div>'; return; }
             
-            if (!requisitions.length) {
-                tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No requisitions found</p></div>';
-                return;
-            }
+            let html = '<table class="data-table"><thead><tr>';
+            html += '<th onclick="sortAudit(\'Requisition_ID\')">ID ' + (auditSortColumn === 'Requisition_ID' ? (auditSortDirection === 'asc' ? '↑' : '↓') : '') + '</th>';
+            html += '<th onclick="sortAudit(\'ALL_FY\')">FY</th><th onclick="sortAudit(\'Type\')">Type</th><th onclick="sortAudit(\'Job_Type\')">Job Type</th>';
+            html += '<th onclick="sortAudit(\'Shop_Name\')">Shop Name</th><th>Brand</th><th>Region</th><th onclick="sortAudit(\'Execution_Status\')">Status</th>';
+            html += '<th>Pre-Audit</th><th>Post-Audit</th><th>Resolution</th><th>Actions</th>';
+            html += '</thead><tbody>';
             
-            let html = `<table><thead><tr>
-                <th onclick="sortBy('Requisition_ID')">Req ID ${sortColumn === 'Requisition_ID' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                <th onclick="sortBy('ALL_FY')">FY ${sortColumn === 'ALL_FY' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                <th onclick="sortBy('Type')">Type ${sortColumn === 'Type' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                <th onclick="sortBy('Job_Type')">Job Type ${sortColumn === 'Job_Type' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                <th onclick="sortBy('Shop_Name')">Shop Name ${sortColumn === 'Shop_Name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                <th onclick="sortBy('Brand')">Brand</th>
-                <th onclick="sortBy('Region')">Region</th>
-                <th onclick="sortBy('Execution_Status')">Status</th>
-                <th>Pre-Audit</th>
-                <th>Post-Audit</th>
-                <th>Actions</th>
-            </tr></thead><tbody>`;
-            
-            requisitions.forEach(req => {
-                const preAuditStatus = req.Pre_Audit_FeedBack ? 'Completed' : (req.canPreAudit ? 'Pending' : 'N/A');
-                const postAuditStatus = req.Post_Audit_FeedBack ? 'Completed' : 'Pending';
-                const preAuditClass = req.Pre_Audit_FeedBack ? 'badge-success' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
-                const postAuditClass = req.Post_Audit_FeedBack ? 'badge-success' : 'badge-warning';
-                const statusClass = req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info';
+            for (const req of requisitions) {
+                const preStatus = req.Pre_Audit_FeedBack ? 'Done' : (req.canPreAudit ? 'Pending' : 'N/A');
+                const postStatus = req.Post_Audit_FeedBack ? 'Done' : 'Pending';
+                const preClass = req.Pre_Audit_FeedBack ? 'badge-info' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
+                const postClass = req.Post_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const resolutionStatus = req.isResolved ? '<span class="badge badge-success">Resolved</span>' : (req.needsRevision ? '<span class="badge badge-warning">Needs Revision</span>' : '<span class="badge badge-info">No Action</span>');
                 
                 html += `<tr>
-                    <td><strong><i class="fas fa-hashtag"></i> ${escapeHtml(req.Requisition_ID || '')}</strong></td>
-                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || 'N/A')}</span></td>
-                    <td>${escapeHtml(req.Type || 'N/A')}</td>
-                    <td>${escapeHtml(req.Job_Type || 'N/A')}</td>
-                    <td><i class="fas fa-store"></i> ${escapeHtml(req.Shop_Name || '')}</td>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || '-')}</span></td>
+                    <td>${escapeHtml(req.Type || '-')}</td>
+                    <td>${escapeHtml(req.Job_Type || '-')}</td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
                     <td>${escapeHtml(req.Brand || '')}</td>
                     <td>${escapeHtml(req.Region || '')}</td>
-                    <td><span class="badge ${statusClass}">${escapeHtml(req.Execution_Status || '')}</span></td>
-                    <td><span class="badge ${preAuditClass}">${preAuditStatus}</span></td>
-                    <td><span class="badge ${postAuditClass}">${postAuditStatus}</span></td>
+                    <td><span class="badge ${req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info'}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${preClass}">${preStatus}</span></td>
+                    <td><span class="badge ${postClass}">${postStatus}</span></td>
+                    <td>${resolutionStatus}</td>
                     <td>
-                        <button class="btn btn-outline" onclick="showDetails('${req.Requisition_ID}')" title="View Details">
-                            <i class="fas fa-info-circle"></i> Details
-                        </button>
-                        ${req.canPreAudit && !req.Pre_Audit_FeedBack ? `<button class="btn btn-primary" onclick="openAuditModal('${req.Requisition_ID}', 'pre')"><i class="fas fa-clipboard"></i> Pre</button>` : ''}
-                        ${req.canPostAudit && !req.Post_Audit_FeedBack ? `<button class="btn btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')"><i class="fas fa-clipboard-list"></i> Post</button>` : ''}
-                    </td>
+                        <button class="btn btn-outline" onclick="showDetails('${escapeHtml(req.Requisition_ID)}')" title="Details"><i class="fas fa-info-circle"></i></button>
+                        ${(req.canPreAudit && !req.Pre_Audit_FeedBack) ? `<button class="btn btn-primary" onclick="openAuditModal('${escapeHtml(req.Requisition_ID)}', 'pre')" title="Pre-Audit"><i class="fas fa-clipboard"></i></button>` : ''}
+                        ${(req.canPostAudit && !req.Post_Audit_FeedBack) ? `<button class="btn btn-secondary" onclick="openAuditModal('${escapeHtml(req.Requisition_ID)}', 'post')" title="Post-Audit"><i class="fas fa-clipboard-list"></i></button>` : ''}
+                        ${req.isResolved ? `<button class="btn btn-success" onclick="viewResolution('${escapeHtml(req.Requisition_ID)}')" title="View Resolution"><i class="fas fa-check-double"></i></button>` : ''}
+                     </div>
                 </tr>`;
-            });
-            
-            html += `</tbody></tr>`;
+            }
+            html += '</tbody></table>';
             tableContainer.innerHTML = html;
         }
 
-        function showDetails(requisitionId) {
-            const req = currentRequisitions.find(r => r.Requisition_ID == requisitionId);
-            if (!req) return;
-            
-            const excludeFields = ['rowIndex', 'canPreAudit', 'canPostAudit', 'id'];
-            
-            let html = '<div class="details-grid">';
-            for (let [key, value] of Object.entries(req)) {
-                if (!excludeFields.includes(key) && value && value !== '') {
-                    html += `
-                        <div class="detail-item">
-                            <div class="detail-label">${formatLabel(key)}</div>
-                            <div class="detail-value">${escapeHtml(String(value))}</div>
-                        </div>
+        async function viewResolution(requisitionId) {
+            const result = await callAPI('getResolvedFeedback', { requisitionId });
+            if (result.success) {
+                const data = result.resolvedData;
+                let html = '';
+                if (data.preResolved && data.preResolved.text) {
+                    html += `<div class="audit-card"><h4><i class="fas fa-check-circle"></i> Pre-Audit Resolution</h4>`;
+                    html += `<p><strong>Resolution:</strong> ${escapeHtml(data.preResolved.text)}</p>`;
+                    if (data.preResolved.imageUrl) html += `<p><strong>Image:</strong> <a href="${data.preResolved.imageUrl}" target="_blank"><img src="${data.preResolved.imageUrl}" class="audit-image"></a></p>`;
+                    html += `</div>`;
+                }
+                if (data.postResolved && data.postResolved.text) {
+                    html += `<div class="audit-card"><h4><i class="fas fa-check-circle"></i> Post-Audit Resolution</h4>`;
+                    html += `<p><strong>Resolution:</strong> ${escapeHtml(data.postResolved.text)}</p>`;
+                    if (data.postResolved.imageUrl) html += `<p><strong>Image:</strong> <a href="${data.postResolved.imageUrl}" target="_blank"><img src="${data.postResolved.imageUrl}" class="audit-image"></a></p>`;
+                    html += `</div>`;
+                }
+                if (!html) html = '<p>No resolution data available.</p>';
+                document.getElementById('viewResolutionContent').innerHTML = html;
+                document.getElementById('viewResolutionModal').style.display = 'block';
+            } else {
+                alert('Error loading resolution details');
+            }
+        }
+
+        // ==================== MARKETING FUNCTIONS ====================
+        async function loadMarketingStats() {
+            try {
+                const result = await callAPI('getMarketingStats', {});
+                if (result.success) {
+                    const stats = result.stats;
+                    let executionStatsHtml = '';
+                    for (const [status, count] of Object.entries(stats.executionStatus)) {
+                        executionStatsHtml += `<div class="stat-card" onclick="filterMarketingByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+                    }
+                    
+                    document.getElementById('marketingStatsContainer').innerHTML = `
+                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${stats.total}</div></div></div>
+                        ${executionStatsHtml}
+                        <div class="stat-card" onclick="filterMarketingByAuditFilter('pending_revisions')"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>Need Revision</h3><div class="stat-number">${stats.needRevision || 0}</div></div></div>
+                        <div class="stat-card" onclick="filterMarketingByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${stats.resolved || 0}</div></div></div>
                     `;
                 }
-            }
-            html += '</div>';
+            } catch (error) { console.error('Error loading marketing stats:', error); }
+        }
+
+        async function loadMarketingData() {
+            const tableContainer = document.getElementById('marketingRequisitionsTable');
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
             
+            try {
+                const result = await callAPI('getMarketingRequisitions', {});
+                if (result.error) throw new Error(result.error);
+                currentMarketingRequisitions = result.requisitions || [];
+                
+                // Populate FY filter
+                const fySet = new Set();
+                currentMarketingRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+                const fySelect = document.getElementById('marketingFyFilter');
+                fySelect.innerHTML = '<option value="">All FY</option>';
+                Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+                
+                // Populate Type filter
+                const typeSet = new Set();
+                currentMarketingRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
+                const typeSelect = document.getElementById('marketingTypeFilter');
+                typeSelect.innerHTML = '<option value="">All Types</option>';
+                Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
+                
+                // Populate Execution Status filter
+                const statusSet = new Set();
+                currentMarketingRequisitions.forEach(req => { if (req.Execution_Status) statusSet.add(req.Execution_Status); });
+                const statusSelect = document.getElementById('marketingStatusFilter');
+                statusSelect.innerHTML = '<option value="">All Status</option>';
+                Array.from(statusSet).sort().forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
+                
+                applyMarketingFilters();
+            } catch (error) {
+                tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadMarketingData()" class="btn btn-primary">Retry</button></div>`;
+            }
+        }
+
+        function filterMarketingByExecutionStatus(status) {
+            document.getElementById('marketingStatusFilter').value = status;
+            applyMarketingFilters();
+        }
+
+        function filterMarketingByAuditFilter(filter) {
+            document.getElementById('marketingAuditFilter').value = filter;
+            applyMarketingFilters();
+        }
+
+        function applyMarketingFilters() {
+            const searchTerm = document.getElementById('marketingSearchInput').value.toLowerCase();
+            const fyFilter = document.getElementById('marketingFyFilter').value;
+            const typeFilter = document.getElementById('marketingTypeFilter').value;
+            const statusFilter = document.getElementById('marketingStatusFilter').value;
+            const auditFilter = document.getElementById('marketingAuditFilter').value;
+            
+            let filtered = currentMarketingRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                if (auditFilter === 'pending_revisions' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+            
+            filtered.sort((a, b) => {
+                let valA = a[marketingSortColumn] || '';
+                let valB = b[marketingSortColumn] || '';
+                return marketingSortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
+            });
+            
+            renderMarketingTable(filtered);
+        }
+
+        function sortMarketing(column) {
+            if (marketingSortColumn === column) { marketingSortDirection = marketingSortDirection === 'asc' ? 'desc' : 'asc'; }
+            else { marketingSortColumn = column; marketingSortDirection = 'asc'; }
+            applyMarketingFilters();
+        }
+
+        function renderMarketingTable(requisitions) {
+            const tableContainer = document.getElementById('marketingRequisitionsTable');
+            if (!requisitions.length) { tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No data found</p></div>'; return; }
+            
+            // SAME TABLE as Audit Dashboard
+            let html = '<table class="data-table"><thead><tr>';
+            html += '<th onclick="sortMarketing(\'Requisition_ID\')">ID ' + (marketingSortColumn === 'Requisition_ID' ? (marketingSortDirection === 'asc' ? '↑' : '↓') : '') + '</th>';
+            html += '<th onclick="sortMarketing(\'ALL_FY\')">FY</th><th onclick="sortMarketing(\'Type\')">Type</th><th onclick="sortMarketing(\'Job_Type\')">Job Type</th>';
+            html += '<th onclick="sortMarketing(\'Shop_Name\')">Shop Name</th><th>Brand</th><th>Region</th><th onclick="sortMarketing(\'Execution_Status\')">Status</th>';
+            html += '<th>Pre-Audit</th><th>Post-Audit</th><th>Resolution</th><th>Actions</th>';
+            html += '</thead><tbody>';
+            
+            for (const req of requisitions) {
+                const preStatus = req.Pre_Audit_FeedBack ? 'Done' : 'Pending';
+                const postStatus = req.Post_Audit_FeedBack ? 'Done' : 'Pending';
+                const preClass = req.Pre_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const postClass = req.Post_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const resolutionStatus = req.isResolved ? '<span class="badge badge-success">Resolved</span>' : (req.needsRevision ? '<span class="badge badge-warning">Needs Revision</span>' : '<span class="badge badge-info">No Action</span>');
+                
+                html += `<tr>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || '-')}</span></td>
+                    <td>${escapeHtml(req.Type || '-')}</td>
+                    <td>${escapeHtml(req.Job_Type || '-')}</td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td>${escapeHtml(req.Brand || '')}</td>
+                    <td>${escapeHtml(req.Region || '')}</td>
+                    <td><span class="badge ${req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info'}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${preClass}">${preStatus}</span></td>
+                    <td><span class="badge ${postClass}">${postStatus}</span></td>
+                    <td>${resolutionStatus}</td>
+                    <td>
+                        <button class="btn btn-outline" onclick="showDetails('${escapeHtml(req.Requisition_ID)}')" title="Details"><i class="fas fa-info-circle"></i></button>
+                        <button class="btn btn-primary" onclick="openEditModal('${escapeHtml(req.Requisition_ID)}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" onclick="confirmDelete('${escapeHtml(req.Requisition_ID)}')" title="Delete"><i class="fas fa-trash"></i></button>
+                        ${req.needsRevision && !req.isResolved ? `<button class="btn btn-warning" onclick="openResolutionModalForRevision('${escapeHtml(req.Requisition_ID)}')" title="Resolve"><i class="fas fa-check-double"></i></button>` : ''}
+                        ${(req.Pre_Audit_FeedBack || req.Post_Audit_FeedBack) ? `<button class="btn btn-secondary" onclick="viewAuditDetails('${escapeHtml(req.Requisition_ID)}')" title="View Audit"><i class="fas fa-eye"></i></button>` : ''}
+                     </div>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        function openResolutionModalForRevision(requisitionId) {
+            const req = currentMarketingRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            let auditType = null;
+            if (req.Pre_Audit_FeedBack && req.Pre_Audit_FeedBack.includes('Needs Revision') && !req.Pre_Audit_Resolved) {
+                auditType = 'pre';
+            } else if (req.Post_Audit_FeedBack && req.Post_Audit_FeedBack.includes('Needs Revision') && !req.Post_Audit_Resolved) {
+                auditType = 'post';
+            }
+            
+            if (auditType) {
+                openResolutionModal(requisitionId, auditType);
+            } else {
+                alert('No pending revision found for this requisition.');
+            }
+        }
+
+        function openEditModal(requisitionId) {
+            const req = currentMarketingRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            document.getElementById('editRequisitionId').value = req.Requisition_ID;
+            document.getElementById('editBrand').value = req.Brand || '';
+            document.getElementById('editType').value = req.Type || '';
+            document.getElementById('editJobType').value = req.Job_Type || '';
+            document.getElementById('editItemType').value = req.Item_Type || '';
+            document.getElementById('editRequestFor').value = req.Request_for || '';
+            document.getElementById('editRemarks').value = req.Remarks || '';
+            document.getElementById('editReqDate').value = req.Req_Date || '';
+            document.getElementById('editRequisitionBy').value = req.Requisition_By || '';
+            document.getElementById('editDesignation').value = req.Designation || '';
+            document.getElementById('editRegion').value = req.Region || '';
+            document.getElementById('editArea').value = req.Area || '';
+            document.getElementById('editTerritory').value = req.Territory || '';
+            document.getElementById('editShopName').value = req.Shop_Name || '';
+            document.getElementById('editAddress').value = req.Address || '';
+            document.getElementById('editMobileNumber').value = req.Mobile_Number || '';
+            document.getElementById('editLength').value = req.Length || '';
+            document.getElementById('editHeight').value = req.Height || '';
+            document.getElementById('editQuantity').value = req.Quantity || '';
+            document.getElementById('editEstimatedCost').value = req.Estimateed_Cost || '';
+            document.getElementById('editWorkorderNo').value = req.Workorder_No || '';
+            document.getElementById('editExpectedHandoverDate').value = req.Expected_Handover_Date || '';
+            document.getElementById('editExecutionStartDate').value = req.Execution_Start_Date || '';
+            document.getElementById('editExecutionEndDate').value = req.Execution_End_Date || '';
+            document.getElementById('editROI').value = req.ROI || '';
+            document.getElementById('editExecutingParty').value = req.Executing_Party || '';
+            document.getElementById('editBillingDate').value = req.Billing_Date || '';
+            document.getElementById('editMKTStatus').value = req.MKT_Status || '';
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const requisitionId = document.getElementById('editRequisitionId').value;
+            const updates = {
+                Brand: document.getElementById('editBrand').value,
+                Type: document.getElementById('editType').value,
+                Job_Type: document.getElementById('editJobType').value,
+                Item_Type: document.getElementById('editItemType').value,
+                Request_for: document.getElementById('editRequestFor').value,
+                Remarks: document.getElementById('editRemarks').value,
+                Req_Date: document.getElementById('editReqDate').value,
+                Requisition_By: document.getElementById('editRequisitionBy').value,
+                Designation: document.getElementById('editDesignation').value,
+                Region: document.getElementById('editRegion').value,
+                Area: document.getElementById('editArea').value,
+                Territory: document.getElementById('editTerritory').value,
+                Shop_Name: document.getElementById('editShopName').value,
+                Address: document.getElementById('editAddress').value,
+                Mobile_Number: document.getElementById('editMobileNumber').value,
+                Length: document.getElementById('editLength').value,
+                Height: document.getElementById('editHeight').value,
+                Quantity: document.getElementById('editQuantity').value,
+                Estimateed_Cost: document.getElementById('editEstimatedCost').value,
+                Workorder_No: document.getElementById('editWorkorderNo').value,
+                Expected_Handover_Date: document.getElementById('editExpectedHandoverDate').value,
+                Execution_Start_Date: document.getElementById('editExecutionStartDate').value,
+                Execution_End_Date: document.getElementById('editExecutionEndDate').value,
+                ROI: document.getElementById('editROI').value,
+                Executing_Party: document.getElementById('editExecutingParty').value,
+                Billing_Date: document.getElementById('editBillingDate').value,
+                MKT_Status: document.getElementById('editMKTStatus').value
+            };
+            
+            const result = await callAPI('updateRequisition', { requisitionId, updates });
+            if (result.success) {
+                alert('Requisition updated successfully!');
+                closeEditModal();
+                loadMarketingData();
+                loadMarketingStats();
+            } else {
+                alert('Error: ' + result.error);
+            }
+        });
+
+        async function confirmDelete(requisitionId) {
+            if (confirm('Are you sure you want to delete this requisition? This action cannot be undone.')) {
+                const result = await callAPI('deleteRequisition', { requisitionId });
+                if (result.success) {
+                    alert('Requisition deleted successfully!');
+                    loadMarketingData();
+                    loadMarketingStats();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            }
+        }
+
+        function openResolutionModal(requisitionId, auditType) {
+            document.getElementById('resolutionRequisitionId').value = requisitionId;
+            document.getElementById('resolutionAuditType').value = auditType;
+            document.getElementById('resolutionTitle').innerHTML = auditType === 'pre' ? '<i class="fas fa-check-circle"></i> Resolve Pre-Audit' : '<i class="fas fa-check-circle"></i> Resolve Post-Audit';
+            document.getElementById('resolutionText').value = '';
+            document.getElementById('resolutionImage').value = '';
+            document.getElementById('resolutionImagePreview').style.display = 'none';
+            document.getElementById('resolutionModal').style.display = 'block';
+        }
+
+        document.getElementById('resolutionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const requisitionId = document.getElementById('resolutionRequisitionId').value;
+            const auditType = document.getElementById('resolutionAuditType').value;
+            const resolution = document.getElementById('resolutionText').value;
+            const imageFile = document.getElementById('resolutionImage').files[0];
+            
+            if (!resolution) { alert('Please enter resolution text'); return; }
+            
+            let imageUrl = null;
+            if (imageFile) {
+                const reader = new FileReader();
+                const imageData = await new Promise((resolve) => {
+                    reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                    reader.readAsDataURL(imageFile);
+                });
+                const uploadResult = await callAPI('uploadImage', { imageData, fileName: imageFile.name, requisitionId, auditType: auditType + '_resolution' });
+                if (uploadResult.success) imageUrl = uploadResult.imageUrl;
+            }
+            
+            const result = await callAPI('submitAuditResolution', { requisitionId, auditType, resolution, imageUrl });
+            if (result.success) {
+                alert('Resolution submitted successfully!');
+                closeResolutionModal();
+                loadMarketingData();
+                loadMarketingStats();
+            } else {
+                alert('Error: ' + result.error);
+            }
+        });
+
+        async function viewAuditDetails(requisitionId) {
+            const result = await callAPI('getAuditData', { requisitionId });
+            if (result.success) {
+                const data = result.auditData;
+                let html = '';
+                
+                if (data.preAudit && data.preAudit.feedback) {
+                    html += `<div class="audit-card"><h4><i class="fas fa-clipboard"></i> Pre-Audit</h4>`;
+                    html += `<p><strong>Feedback:</strong> ${escapeHtml(data.preAudit.feedback)}</p>`;
+                    html += `<p><strong>Description:</strong> ${escapeHtml(data.preAudit.description || 'N/A')}</p>`;
+                    html += `<p><strong>Date:</strong> ${escapeHtml(data.preAudit.date || 'N/A')}</p>`;
+                    html += `<p><strong>Auditor:</strong> ${escapeHtml(data.preAudit.auditorEmail || 'N/A')}</p>`;
+                    if (data.preAudit.imageUrl) html += `<p><strong>Image:</strong> <a href="${data.preAudit.imageUrl}" target="_blank"><img src="${data.preAudit.imageUrl}" class="audit-image"></a></p>`;
+                    html += `</div>`;
+                }
+                
+                if (data.postAudit && data.postAudit.feedback) {
+                    html += `<div class="audit-card"><h4><i class="fas fa-clipboard-list"></i> Post-Audit</h4>`;
+                    html += `<p><strong>Feedback:</strong> ${escapeHtml(data.postAudit.feedback)}</p>`;
+                    html += `<p><strong>Description:</strong> ${escapeHtml(data.postAudit.description || 'N/A')}</p>`;
+                    html += `<p><strong>Date:</strong> ${escapeHtml(data.postAudit.date || 'N/A')}</p>`;
+                    html += `<p><strong>Auditor:</strong> ${escapeHtml(data.postAudit.auditorEmail || 'N/A')}</p>`;
+                    if (data.postAudit.imageUrl) html += `<p><strong>Image:</strong> <a href="${data.postAudit.imageUrl}" target="_blank"><img src="${data.postAudit.imageUrl}" class="audit-image"></a></p>`;
+                    html += `</div>`;
+                }
+                
+                if (!html) html = '<p>No audit data available.</p>';
+                document.getElementById('viewAuditContent').innerHTML = html;
+                document.getElementById('viewAuditModal').style.display = 'block';
+            } else {
+                alert('Error loading audit details');
+            }
+        }
+
+        // ==================== COMMON FUNCTIONS ====================
+        function showDetails(requisitionId) {
+            const allRequisitions = [...currentRequisitions, ...currentMarketingRequisitions];
+            const req = allRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            const excludeFields = ['rowIndex', 'canPreAudit', 'canPostAudit', 'needsRevision', 'isResolved'];
+            let html = '';
+            for (let [key, value] of Object.entries(req)) {
+                if (!excludeFields.includes(key) && value && value !== '') {
+                    html += `<div class="detail-item"><div class="detail-label">${formatLabel(key)}</div><div class="detail-value">${escapeHtml(String(value))}</div></div>`;
+                }
+            }
             document.getElementById('detailsContent').innerHTML = html;
             document.getElementById('detailsModal').style.display = 'block';
         }
 
-        function formatLabel(key) {
-            return key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
-        }
+        function formatLabel(key) { return key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim(); }
 
-        function openAuditModal(requisitionId, type) {
+        async function openAuditModal(requisitionId, type) {
             const req = currentRequisitions.find(r => r.Requisition_ID == requisitionId);
             if (!req) return;
-            
             currentAuditType = type;
             currentRequisition = req;
-            
-            document.getElementById('modalTitle').innerHTML = type === 'pre' ? '<i class="fas fa-clipboard"></i> Pre-Audit Form' : '<i class="fas fa-clipboard-list"></i> Post-Audit Form';
+            document.getElementById('modalTitle').innerHTML = type === 'pre' ? '<i class="fas fa-clipboard"></i> Pre-Audit' : '<i class="fas fa-clipboard-list"></i> Post-Audit';
             document.getElementById('auditRequisitionId').value = req.Requisition_ID;
             document.getElementById('auditShopName').value = req.Shop_Name;
             document.getElementById('auditFeedback').value = '';
             document.getElementById('auditDescription').value = '';
             document.getElementById('auditImage').value = '';
             document.getElementById('imagePreview').style.display = 'none';
-            
             document.getElementById('auditModal').style.display = 'block';
         }
 
         document.getElementById('auditForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const feedback = document.getElementById('auditFeedback').value;
             const description = document.getElementById('auditDescription').value;
             const imageFile = document.getElementById('auditImage').files[0];
             const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
-            
-            if (!feedback) {
-                alert('Please select feedback');
-                return;
-            }
+            if (!feedback) { alert('Please select feedback'); return; }
             
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -1091,50 +1087,27 @@
             
             try {
                 let imageUrl = null;
-                
                 if (imageFile) {
                     const reader = new FileReader();
                     const imageData = await new Promise((resolve) => {
                         reader.onload = (e) => resolve(e.target.result.split(',')[1]);
                         reader.readAsDataURL(imageFile);
                     });
-                    
-                    const uploadResult = await callAPI('uploadImage', {
-                        imageData: imageData,
-                        fileName: imageFile.name,
-                        requisitionId: currentRequisition.Requisition_ID,
-                        auditType: currentAuditType
-                    });
-                    
-                    if (uploadResult.success) {
-                        imageUrl = uploadResult.imageUrl;
-                    } else {
-                        throw new Error(uploadResult.error);
-                    }
+                    const uploadResult = await callAPI('uploadImage', { imageData, fileName: imageFile.name, requisitionId: currentRequisition.Requisition_ID, auditType: currentAuditType });
+                    if (uploadResult.success) imageUrl = uploadResult.imageUrl;
+                    else throw new Error(uploadResult.error);
                 }
                 
                 const endpoint = currentAuditType === 'pre' ? 'submitPreAudit' : 'submitPostAudit';
-                const result = await callAPI(endpoint, {
-                    requisitionId: currentRequisition.Requisition_ID,
-                    feedback: feedback,
-                    description: description,
-                    imageUrl: imageUrl,
-                    auditorEmail: user.email
-                });
+                const result = await callAPI(endpoint, { requisitionId: currentRequisition.Requisition_ID, feedback, description, imageUrl, auditorEmail: user.email });
                 
                 if (result.success) {
-                    alert(`✅ ${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
+                    alert(`✅ ${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted!`);
                     closeModal();
                     loadRequisitions();
-                } else {
-                    alert('❌ Error: ' + result.error);
-                }
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
+                } else alert('❌ Error: ' + result.error);
+            } catch (error) { alert('❌ Error: ' + error.message); }
+            finally { submitBtn.innerHTML = originalText; submitBtn.disabled = false; }
         });
 
         document.getElementById('auditImage').addEventListener('change', (e) => {
@@ -1149,37 +1122,49 @@
             }
         });
 
-        function closeModal() {
-            document.getElementById('auditModal').style.display = 'none';
-            document.getElementById('auditForm').reset();
-            document.getElementById('imagePreview').style.display = 'none';
-        }
+        document.getElementById('resolutionImage').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('resolutionPreviewImg').src = e.target.result;
+                    document.getElementById('resolutionImagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
-        function closeDetailsModal() {
-            document.getElementById('detailsModal').style.display = 'none';
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function closeModal() { document.getElementById('auditModal').style.display = 'none'; document.getElementById('auditForm').reset(); document.getElementById('imagePreview').style.display = 'none'; }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+        function closeResolutionModal() { document.getElementById('resolutionModal').style.display = 'none'; }
+        function closeViewAuditModal() { document.getElementById('viewAuditModal').style.display = 'none'; }
+        function closeViewResolutionModal() { document.getElementById('viewResolutionModal').style.display = 'none'; }
+        function closeDetailsModal() { document.getElementById('detailsModal').style.display = 'none'; }
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
         // Event listeners
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        document.getElementById('searchInput').addEventListener('input', applyFilters);
-        document.getElementById('fyFilter').addEventListener('change', applyFilters);
-        document.getElementById('typeFilter').addEventListener('change', applyFilters);
-        document.getElementById('statusFilter').addEventListener('change', applyFilters);
-        document.getElementById('auditFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchInput').addEventListener('input', applyAuditFilters);
+        document.getElementById('fyFilter').addEventListener('change', applyAuditFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyAuditFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyAuditFilters);
+        document.getElementById('auditFilter').addEventListener('change', applyAuditFilters);
+        document.getElementById('marketingSearchInput').addEventListener('input', applyMarketingFilters);
+        document.getElementById('marketingFyFilter').addEventListener('change', applyMarketingFilters);
+        document.getElementById('marketingTypeFilter').addEventListener('change', applyMarketingFilters);
+        document.getElementById('marketingStatusFilter').addEventListener('change', applyMarketingFilters);
+        document.getElementById('marketingAuditFilter').addEventListener('change', applyMarketingFilters);
         
         window.onclick = function(event) {
             if (event.target === document.getElementById('auditModal')) closeModal();
             if (event.target === document.getElementById('detailsModal')) closeDetailsModal();
+            if (event.target === document.getElementById('developerModal')) closeDeveloperModal();
+            if (event.target === document.getElementById('editModal')) closeEditModal();
+            if (event.target === document.getElementById('resolutionModal')) closeResolutionModal();
+            if (event.target === document.getElementById('viewAuditModal')) closeViewAuditModal();
+            if (event.target === document.getElementById('viewResolutionModal')) closeViewResolutionModal();
         }
         
-        // Initialize
         checkAuth();
     </script>
 </body>
