@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTL Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BTL Management System - Audit Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,7 +14,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
@@ -23,27 +25,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .login-box {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             overflow: hidden;
-            width: 400px;
-            max-width: 90%;
+            width: 100%;
+            max-width: 420px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-header {
-            background: #1a73e8;
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
         }
 
         .login-header h1 {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
         }
 
         .login-form {
@@ -53,48 +75,68 @@
         /* Dashboard */
         .dashboard-container {
             display: none;
-            background: #f5f5f5;
+            background: #f0f2f5;
             min-height: 100vh;
         }
 
         .dashboard-header {
-            background: #1a73e8;
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
             color: white;
-            padding: 15px 30px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px;
+            border-radius: 50px;
         }
 
         .logout-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 8px 20px;
+            border-radius: 50px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .main-container {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
+        /* Filters */
         .filters {
             background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 16px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
@@ -102,54 +144,219 @@
 
         .filter-item {
             flex: 1;
-            min-width: 150px;
+            min-width: 180px;
         }
 
         .filter-item label {
             display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 12px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .filter-item input, .filter-item select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
+        .filter-item input:focus, .filter-item select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .stat-info h3 {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* Requisitions Table */
         .requisitions-container {
             background: white;
-            border-radius: 10px;
+            border-radius: 16px;
             overflow-x: auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1000px;
         }
 
         th {
-            background: #f8f9fa;
-            padding: 12px;
+            background: #f9fafb;
+            padding: 15px 12px;
             text-align: left;
             font-weight: 600;
-            border-bottom: 2px solid #e0e0e0;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
             cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:hover {
+            background: #f3f4f6;
         }
 
         td {
             padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         tr:hover {
-            background: #f8f9fa;
+            background: #f9fafb;
         }
 
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-primary {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            margin: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid #1a73e8;
+            color: #1a73e8;
+        }
+
+        .btn-outline:hover {
+            background: #1a73e8;
+            color: white;
+        }
+
+        /* Form Elements */
         .form-group {
             margin-bottom: 20px;
         }
@@ -157,103 +364,30 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: #374151;
+            font-size: 13px;
         }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
         }
 
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
-        }
-
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1a73e8;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .audit-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .audit-btn {
-            background: #1a73e8;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin: 2px;
-        }
-
-        .audit-btn-secondary {
-            background: #6c757d;
-        }
-
-        .audit-btn-success {
-            background: #28a745;
         }
 
         /* Modal */
@@ -264,30 +398,86 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
             z-index: 1000;
             overflow-y: auto;
         }
 
         .modal-content {
             background: white;
-            max-width: 600px;
+            max-width: 800px;
+            width: 90%;
             margin: 50px auto;
-            border-radius: 10px;
+            border-radius: 24px;
             padding: 30px;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
         }
 
         .close {
-            font-size: 28px;
+            font-size: 32px;
             cursor: pointer;
-            color: #999;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #1f2937;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: #f9fafb;
+            padding: 12px 15px;
+            border-radius: 12px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6b7280;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+            word-break: break-word;
         }
 
         .image-preview {
@@ -298,16 +488,82 @@
 
         .image-preview img {
             max-width: 100%;
-            border-radius: 5px;
+            border-radius: 12px;
         }
 
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .filters {
-                flex-direction: column;
-            }
             .dashboard-header {
                 flex-direction: column;
                 text-align: center;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-item {
+                min-width: 100%;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 18px;
             }
         }
     </style>
@@ -317,25 +573,27 @@
     <div id="loginPage" class="login-container">
         <div class="login-box">
             <div class="login-header">
-                <h1>BTL Management System</h1>
+                <h1><i class="fas fa-clipboard-list"></i> BTL Management System</h1>
                 <p>Audit Portal Login</p>
             </div>
             <div class="login-form">
-                <div class="error-message" id="loginError"></div>
+                <div class="error-message" id="loginError" style="display: none;"></div>
                 <form id="loginForm">
                     <div class="form-group">
-                        <label>Email Address</label>
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
                         <input type="email" id="email" required placeholder="Enter your email">
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
+                        <label><i class="fas fa-lock"></i> Password</label>
                         <input type="password" id="password" required placeholder="Enter your password">
                     </div>
-                    <button type="submit" class="audit-btn" style="width: 100%; padding: 12px;">Login</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
                 </form>
                 <div class="loading" id="loginLoading" style="display: none;">
                     <div class="spinner"></div>
-                    <p style="margin-top: 10px;">Authenticating...</p>
+                    <p>Authenticating...</p>
                 </div>
             </div>
         </div>
@@ -344,21 +602,38 @@
     <!-- Dashboard Page -->
     <div id="dashboardPage" class="dashboard-container">
         <div class="dashboard-header">
-            <h1>BTL Management System - Audit Dashboard</h1>
+            <h1><i class="fas fa-chart-line"></i> BTL Management System - Audit Dashboard</h1>
             <div class="user-info">
+                <i class="fas fa-user-circle"></i>
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
 
         <div class="main-container">
+            <!-- Stats Cards -->
+            <div class="stats-container" id="statsContainer"></div>
+
+            <!-- Filters -->
             <div class="filters">
                 <div class="filter-item">
-                    <label>Search Requisition ID / Shop Name</label>
-                    <input type="text" id="searchInput" placeholder="Type to search...">
+                    <label><i class="fas fa-search"></i> Search</label>
+                    <input type="text" id="searchInput" placeholder="Requisition ID / Shop Name...">
                 </div>
                 <div class="filter-item">
-                    <label>Execution Status</label>
+                    <label><i class="fas fa-calendar"></i> FY (Financial Year)</label>
+                    <select id="fyFilter">
+                        <option value="">All FY</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label><i class="fas fa-tag"></i> Type</label>
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label><i class="fas fa-chart-simple"></i> Execution Status</label>
                     <select id="statusFilter">
                         <option value="">All</option>
                         <option value="Design Phase">Design Phase</option>
@@ -369,7 +644,7 @@
                     </select>
                 </div>
                 <div class="filter-item">
-                    <label>Audit Status</label>
+                    <label><i class="fas fa-check-circle"></i> Audit Status</label>
                     <select id="auditFilter">
                         <option value="">All</option>
                         <option value="pending_pre">Pending Pre-Audit</option>
@@ -380,6 +655,7 @@
                 </div>
             </div>
 
+            <!-- Requisitions Table -->
             <div class="requisitions-container">
                 <div id="requisitionsTable">
                     <div class="loading">
@@ -395,71 +671,81 @@
     <div id="auditModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Submit Audit</h2>
+                <h2 id="modalTitle"><i class="fas fa-clipboard"></i> Submit Audit</h2>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
             <form id="auditForm">
                 <div class="form-group">
-                    <label>Requisition ID</label>
+                    <label><i class="fas fa-hashtag"></i> Requisition ID</label>
                     <input type="text" id="auditRequisitionId" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Shop Name</label>
+                    <label><i class="fas fa-store"></i> Shop Name</label>
                     <input type="text" id="auditShopName" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Feedback *</label>
+                    <label><i class="fas fa-star"></i> Feedback *</label>
                     <select id="auditFeedback" required>
                         <option value="">Select Feedback</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Approved with Comments">Approved with Comments</option>
-                        <option value="Needs Revision">Needs Revision</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="Approved">✅ Approved</option>
+                        <option value="Approved with Comments">📝 Approved with Comments</option>
+                        <option value="Needs Revision">🔄 Needs Revision</option>
+                        <option value="Rejected">❌ Rejected</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Description / Comments</label>
+                    <label><i class="fas fa-comment"></i> Description / Comments</label>
                     <textarea id="auditDescription" placeholder="Enter detailed description..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Upload Image</label>
+                    <label><i class="fas fa-camera"></i> Upload Image</label>
                     <input type="file" id="auditImage" accept="image/*">
                     <div class="image-preview" id="imagePreview">
                         <img id="previewImg" src="">
                     </div>
                 </div>
-                <button type="submit" class="audit-btn" style="width: 100%;">Submit Audit</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+                    <i class="fas fa-paper-plane"></i> Submit Audit
+                </button>
             </form>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Requisition Details</h2>
+                <span class="close" onclick="closeDetailsModal()">&times;</span>
+            </div>
+            <div id="detailsContent"></div>
         </div>
     </div>
 
     <script>
         // ==================== CONFIGURATION ====================
-        // REPLACE THIS WITH YOUR APPS SCRIPT URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxSzeg0VYxA2pna91LXySvxs54R3T5UWuIf6HUWw5R16bIyWxgQbzsL29K9SGvZGQqK/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyND0V5SI8kJDlSmYT8Ntqn--gye48sb1LIw32KoT0ZF4JOeHah7w2iub0H7UnTyZ6i/exec';
         
         let currentRequisitions = [];
         let currentAuditType = null;
         let currentRequisition = null;
-        let sortColumn = '';
-        let sortDirection = 'asc';
+        let sortColumn = 'Requisition_ID';
+        let sortDirection = 'desc';
 
-        // Helper: make API call - same pattern as working example
+        // Helper: make API call
         async function callAPI(action, data = {}) {
             const token = localStorage.getItem('btl_token');
             if (token) data.token = token;
             
-            const payload = { action: action, data: data };
-            
             const response = await fetch(API_URL, {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ action: action, data: data })
             });
             
             return await response.json();
         }
 
-        // Login - using same pattern as working example
+        // Login handler
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -481,13 +767,13 @@
                     localStorage.setItem('btl_user', JSON.stringify(result.user));
                     checkAuth();
                 } else {
-                    errorDiv.textContent = result.error || 'Login failed';
+                    errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${result.error || 'Login failed'}`;
                     errorDiv.style.display = 'block';
                     loginForm.style.display = 'block';
                     loginLoading.style.display = 'none';
                 }
             } catch (error) {
-                errorDiv.textContent = 'Error: ' + error.message;
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${error.message}`;
                 errorDiv.style.display = 'block';
                 loginForm.style.display = 'block';
                 loginLoading.style.display = 'none';
@@ -507,7 +793,7 @@
                 return false;
             }
             
-            document.getElementById('userName').textContent = `Welcome, ${user.fullName || user.email}`;
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${user.fullName || user.email}`;
             showPage('dashboard');
             loadRequisitions();
             return true;
@@ -517,6 +803,7 @@
             localStorage.removeItem('btl_token');
             localStorage.removeItem('btl_user');
             showPage('login');
+            document.getElementById('loginForm').reset();
         }
 
         function showPage(page) {
@@ -547,14 +834,86 @@
                 }
                 
                 currentRequisitions = result.requisitions || [];
+                
+                // Populate filter options
+                populateFilterOptions();
+                
+                // Update stats
+                updateStats();
+                
+                // Apply filters
                 applyFilters();
             } catch (error) {
-                tableContainer.innerHTML = `<div class="no-data"><p>Error: ${error.message}</p><button onclick="loadRequisitions()" class="audit-btn">Retry</button></div>`;
+                tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadRequisitions()" class="btn btn-primary">Retry</button></div>`;
             }
+        }
+
+        function populateFilterOptions() {
+            // Populate FY filter
+            const fySet = new Set();
+            currentRequisitions.forEach(req => {
+                if (req.ALL_FY) fySet.add(req.ALL_FY);
+            });
+            const fySelect = document.getElementById('fyFilter');
+            fySelect.innerHTML = '<option value="">All FY</option>';
+            Array.from(fySet).sort().reverse().forEach(fy => {
+                fySelect.innerHTML += `<option value="${fy}">${fy}</option>`;
+            });
+            
+            // Populate Type filter
+            const typeSet = new Set();
+            currentRequisitions.forEach(req => {
+                if (req.Type) typeSet.add(req.Type);
+            });
+            const typeSelect = document.getElementById('typeFilter');
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+            Array.from(typeSet).sort().forEach(type => {
+                typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+            });
+        }
+
+        function updateStats() {
+            const total = currentRequisitions.length;
+            const pendingPre = currentRequisitions.filter(r => !r.Pre_Audit_FeedBack && r.canPreAudit).length;
+            const pendingPost = currentRequisitions.filter(r => !r.Post_Audit_FeedBack && r.canPostAudit).length;
+            const completed = currentRequisitions.filter(r => r.Pre_Audit_FeedBack || r.Post_Audit_FeedBack).length;
+            
+            document.getElementById('statsContainer').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Requisitions</h3>
+                        <div class="stat-number">${total}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3>Pending Pre-Audit</h3>
+                        <div class="stat-number">${pendingPre}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="stat-info">
+                        <h3>Pending Post-Audit</h3>
+                        <div class="stat-number">${pendingPost}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3>Audits Completed</h3>
+                        <div class="stat-number">${completed}</div>
+                    </div>
+                </div>
+            `;
         }
 
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const fyFilter = document.getElementById('fyFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
             const auditFilter = document.getElementById('auditFilter').value;
             
@@ -563,6 +922,8 @@
                     !req.Shop_Name?.toLowerCase().includes(searchTerm)) {
                     return false;
                 }
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
                 if (statusFilter && req.Execution_Status !== statusFilter) return false;
                 
                 if (auditFilter) {
@@ -587,13 +948,16 @@
                 return true;
             });
             
-            if (sortColumn) {
-                filtered.sort((a, b) => {
-                    let valA = a[sortColumn] || '';
-                    let valB = b[sortColumn] || '';
-                    return sortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
-                });
-            }
+            // Apply sorting
+            filtered.sort((a, b) => {
+                let valA = a[sortColumn] || '';
+                let valB = b[sortColumn] || '';
+                if (sortDirection === 'asc') {
+                    return valA > valB ? 1 : -1;
+                } else {
+                    return valA < valB ? 1 : -1;
+                }
+            });
             
             renderTable(filtered);
         }
@@ -612,52 +976,81 @@
             const tableContainer = document.getElementById('requisitionsTable');
             
             if (!requisitions.length) {
-                tableContainer.innerHTML = '<div class="no-data"><p>No requisitions found</p></div>';
+                tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No requisitions found</p></div>';
                 return;
             }
             
             let html = `<table><thead><tr>
-                <th onclick="sortBy('Requisition_ID')">Requisition ID</th>
-                <th onclick="sortBy('Shop_Name')">Shop Name</th>
+                <th onclick="sortBy('Requisition_ID')">Req ID ${sortColumn === 'Requisition_ID' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                <th onclick="sortBy('ALL_FY')">FY ${sortColumn === 'ALL_FY' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                <th onclick="sortBy('Type')">Type ${sortColumn === 'Type' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                <th onclick="sortBy('Job_Type')">Job Type ${sortColumn === 'Job_Type' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
+                <th onclick="sortBy('Shop_Name')">Shop Name ${sortColumn === 'Shop_Name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
                 <th onclick="sortBy('Brand')">Brand</th>
                 <th onclick="sortBy('Region')">Region</th>
-                <th onclick="sortBy('Execution_Status')">Execution Status</th>
+                <th onclick="sortBy('Execution_Status')">Status</th>
                 <th>Pre-Audit</th>
                 <th>Post-Audit</th>
                 <th>Actions</th>
             </tr></thead><tbody>`;
             
             requisitions.forEach(req => {
-                const preAuditStatus = req.Pre_Audit_FeedBack ? 'Completed' : (req.canPreAudit ? 'Pending' : 'Not Available');
+                const preAuditStatus = req.Pre_Audit_FeedBack ? 'Completed' : (req.canPreAudit ? 'Pending' : 'N/A');
                 const postAuditStatus = req.Post_Audit_FeedBack ? 'Completed' : 'Pending';
                 const preAuditClass = req.Pre_Audit_FeedBack ? 'badge-success' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
                 const postAuditClass = req.Post_Audit_FeedBack ? 'badge-success' : 'badge-warning';
+                const statusClass = req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info';
                 
                 html += `<tr>
-                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
-                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td><strong><i class="fas fa-hashtag"></i> ${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || 'N/A')}</span></td>
+                    <td>${escapeHtml(req.Type || 'N/A')}</td>
+                    <td>${escapeHtml(req.Job_Type || 'N/A')}</td>
+                    <td><i class="fas fa-store"></i> ${escapeHtml(req.Shop_Name || '')}</td>
                     <td>${escapeHtml(req.Brand || '')}</td>
                     <td>${escapeHtml(req.Region || '')}</td>
-                    <td><span class="audit-badge badge-info">${escapeHtml(req.Execution_Status || '')}</span></td>
-                    <td><span class="audit-badge ${preAuditClass}">${preAuditStatus}</span></td>
-                    <td><span class="audit-badge ${postAuditClass}">${postAuditStatus}</span></td>
-                    <td>`;
-                
-                if (req.canPreAudit && !req.Pre_Audit_FeedBack) {
-                    html += `<button class="audit-btn" onclick="openAuditModal('${req.Requisition_ID}', 'pre')">Pre-Audit</button>`;
-                }
-                if (req.canPostAudit && !req.Post_Audit_FeedBack) {
-                    html += `<button class="audit-btn audit-btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')">Post-Audit</button>`;
-                }
-                if ((req.Pre_Audit_FeedBack || req.Post_Audit_FeedBack)) {
-                    html += `<button class="audit-btn audit-btn-success" onclick="viewAudit('${req.Requisition_ID}')">View</button>`;
-                }
-                
-                html += `</td></tr>`;
+                    <td><span class="badge ${statusClass}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${preAuditClass}">${preAuditStatus}</span></td>
+                    <td><span class="badge ${postAuditClass}">${postAuditStatus}</span></td>
+                    <td>
+                        <button class="btn btn-outline" onclick="showDetails('${req.Requisition_ID}')" title="View Details">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        ${req.canPreAudit && !req.Pre_Audit_FeedBack ? `<button class="btn btn-primary" onclick="openAuditModal('${req.Requisition_ID}', 'pre')"><i class="fas fa-clipboard"></i> Pre</button>` : ''}
+                        ${req.canPostAudit && !req.Post_Audit_FeedBack ? `<button class="btn btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')"><i class="fas fa-clipboard-list"></i> Post</button>` : ''}
+                    </td>
+                </tr>`;
             });
             
-            html += `</tbody></table>`;
+            html += `</tbody></tr>`;
             tableContainer.innerHTML = html;
+        }
+
+        function showDetails(requisitionId) {
+            const req = currentRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            const excludeFields = ['rowIndex', 'canPreAudit', 'canPostAudit', 'id'];
+            
+            let html = '<div class="details-grid">';
+            for (let [key, value] of Object.entries(req)) {
+                if (!excludeFields.includes(key) && value && value !== '') {
+                    html += `
+                        <div class="detail-item">
+                            <div class="detail-label">${formatLabel(key)}</div>
+                            <div class="detail-value">${escapeHtml(String(value))}</div>
+                        </div>
+                    `;
+                }
+            }
+            html += '</div>';
+            
+            document.getElementById('detailsContent').innerHTML = html;
+            document.getElementById('detailsModal').style.display = 'block';
+        }
+
+        function formatLabel(key) {
+            return key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
         }
 
         function openAuditModal(requisitionId, type) {
@@ -667,7 +1060,7 @@
             currentAuditType = type;
             currentRequisition = req;
             
-            document.getElementById('modalTitle').textContent = type === 'pre' ? 'Pre-Audit Form' : 'Post-Audit Form';
+            document.getElementById('modalTitle').innerHTML = type === 'pre' ? '<i class="fas fa-clipboard"></i> Pre-Audit Form' : '<i class="fas fa-clipboard-list"></i> Post-Audit Form';
             document.getElementById('auditRequisitionId').value = req.Requisition_ID;
             document.getElementById('auditShopName').value = req.Shop_Name;
             document.getElementById('auditFeedback').value = '';
@@ -692,8 +1085,8 @@
             }
             
             const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             submitBtn.disabled = true;
             
             try {
@@ -715,6 +1108,8 @@
                     
                     if (uploadResult.success) {
                         imageUrl = uploadResult.imageUrl;
+                    } else {
+                        throw new Error(uploadResult.error);
                     }
                 }
                 
@@ -728,51 +1123,19 @@
                 });
                 
                 if (result.success) {
-                    alert(`${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
+                    alert(`✅ ${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
                     closeModal();
                     loadRequisitions();
                 } else {
-                    alert('Error: ' + result.error);
+                    alert('❌ Error: ' + result.error);
                 }
             } catch (error) {
-                alert('Error: ' + error.message);
+                alert('❌ Error: ' + error.message);
             } finally {
-                submitBtn.textContent = originalText;
+                submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             }
         });
-
-        async function viewAudit(requisitionId) {
-            try {
-                const result = await callAPI('getAuditData', { requisitionId: requisitionId });
-                
-                if (result.success && result.auditData) {
-                    let message = 'AUDIT DETAILS\n\n';
-                    
-                    if (result.auditData.preAudit.feedback) {
-                        message += 'PRE-AUDIT:\n';
-                        message += `Feedback: ${result.auditData.preAudit.feedback}\n`;
-                        message += `Description: ${result.auditData.preAudit.description || 'N/A'}\n`;
-                        message += `Date: ${result.auditData.preAudit.date || 'N/A'}\n`;
-                        message += `Auditor: ${result.auditData.preAudit.auditorEmail || 'N/A'}\n\n`;
-                    }
-                    
-                    if (result.auditData.postAudit.feedback) {
-                        message += 'POST-AUDIT:\n';
-                        message += `Feedback: ${result.auditData.postAudit.feedback}\n`;
-                        message += `Description: ${result.auditData.postAudit.description || 'N/A'}\n`;
-                        message += `Date: ${result.auditData.postAudit.date || 'N/A'}\n`;
-                        message += `Auditor: ${result.auditData.postAudit.auditorEmail || 'N/A'}\n`;
-                    }
-                    
-                    alert(message);
-                } else {
-                    alert('No audit data found');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        }
 
         document.getElementById('auditImage').addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -792,6 +1155,10 @@
             document.getElementById('imagePreview').style.display = 'none';
         }
 
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -802,12 +1169,14 @@
         // Event listeners
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
         document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('fyFilter').addEventListener('change', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
         document.getElementById('statusFilter').addEventListener('change', applyFilters);
         document.getElementById('auditFilter').addEventListener('change', applyFilters);
         
         window.onclick = function(event) {
-            const modal = document.getElementById('auditModal');
-            if (event.target === modal) closeModal();
+            if (event.target === document.getElementById('auditModal')) closeModal();
+            if (event.target === document.getElementById('detailsModal')) closeDetailsModal();
         }
         
         // Initialize
