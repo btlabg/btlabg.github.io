@@ -1,10 +1,9 @@
-<!--github.io/index.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BTL Management System - Audit Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTL Management System</title>
     <style>
         * {
             margin: 0;
@@ -14,13 +13,12 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
 
-        /* ========== LOGIN PAGE STYLES ========== */
+        /* Login Page */
         .login-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -48,18 +46,15 @@
             margin-bottom: 10px;
         }
 
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
         .login-form {
             padding: 30px;
         }
 
-        /* ========== DASHBOARD STYLES ========== */
+        /* Dashboard */
         .dashboard-container {
             display: none;
+            background: #f5f5f5;
+            min-height: 100vh;
         }
 
         .dashboard-header {
@@ -71,10 +66,6 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
-        }
-
-        .dashboard-header h1 {
-            font-size: 20px;
         }
 
         .user-info {
@@ -90,34 +81,23 @@
             padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
         }
 
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* Main Container */
         .main-container {
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        /* Filters */
         .filters {
             background: white;
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .filter-group {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
-            align-items: flex-end;
         }
 
         .filter-item {
@@ -138,10 +118,8 @@
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
         }
 
-        /* Requisitions Table */
         .requisitions-container {
             background: white;
             border-radius: 10px;
@@ -152,7 +130,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
         }
 
         th {
@@ -160,14 +137,8 @@
             padding: 12px;
             text-align: left;
             font-weight: 600;
-            color: #333;
             border-bottom: 2px solid #e0e0e0;
             cursor: pointer;
-            user-select: none;
-        }
-
-        th:hover {
-            background: #e9ecef;
         }
 
         td {
@@ -179,7 +150,6 @@
             background: #f8f9fa;
         }
 
-        /* Common Styles */
         .form-group {
             margin-bottom: 20px;
         }
@@ -278,21 +248,12 @@
             margin: 2px;
         }
 
-        .audit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
         .audit-btn-secondary {
             background: #6c757d;
         }
 
         .audit-btn-success {
             background: #28a745;
-        }
-
-        button {
-            cursor: pointer;
         }
 
         /* Modal */
@@ -323,18 +284,10 @@
             margin-bottom: 20px;
         }
 
-        .modal-header h2 {
-            font-size: 24px;
-        }
-
         .close {
             font-size: 28px;
             cursor: pointer;
             color: #999;
-        }
-
-        .close:hover {
-            color: #333;
         }
 
         .image-preview {
@@ -348,24 +301,13 @@
             border-radius: 5px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .filter-group {
+            .filters {
                 flex-direction: column;
             }
-            
-            .filter-item {
-                width: 100%;
-            }
-            
             .dashboard-header {
                 flex-direction: column;
                 text-align: center;
-            }
-            
-            .modal-content {
-                margin: 20px;
-                padding: 20px;
             }
         }
     </style>
@@ -393,7 +335,7 @@
                 </form>
                 <div class="loading" id="loginLoading" style="display: none;">
                     <div class="spinner"></div>
-                    <p style="margin-top: 10px; color: #666;">Authenticating...</p>
+                    <p style="margin-top: 10px;">Authenticating...</p>
                 </div>
             </div>
         </div>
@@ -402,41 +344,39 @@
     <!-- Dashboard Page -->
     <div id="dashboardPage" class="dashboard-container">
         <div class="dashboard-header">
-            <h1>🏪 BTL Management System - Audit Dashboard</h1>
+            <h1>BTL Management System - Audit Dashboard</h1>
             <div class="user-info">
                 <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </div>
 
         <div class="main-container">
             <div class="filters">
-                <div class="filter-group">
-                    <div class="filter-item">
-                        <label>🔍 Search Requisition ID / Shop Name</label>
-                        <input type="text" id="searchInput" placeholder="Type to search...">
-                    </div>
-                    <div class="filter-item">
-                        <label>📊 Execution Status</label>
-                        <select id="statusFilter">
-                            <option value="">All</option>
-                            <option value="Design Phase">Design Phase</option>
-                            <option value="Initial Phase">Initial Phase</option>
-                            <option value="Middle Phase">Middle Phase</option>
-                            <option value="Final Phase">Final Phase</option>
-                            <option value="Executed">Executed</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <label>✅ Audit Status</label>
-                        <select id="auditFilter">
-                            <option value="">All</option>
-                            <option value="pending_pre">Pending Pre-Audit</option>
-                            <option value="completed_pre">Pre-Audit Completed</option>
-                            <option value="pending_post">Pending Post-Audit</option>
-                            <option value="completed_post">Post-Audit Completed</option>
-                        </select>
-                    </div>
+                <div class="filter-item">
+                    <label>Search Requisition ID / Shop Name</label>
+                    <input type="text" id="searchInput" placeholder="Type to search...">
+                </div>
+                <div class="filter-item">
+                    <label>Execution Status</label>
+                    <select id="statusFilter">
+                        <option value="">All</option>
+                        <option value="Design Phase">Design Phase</option>
+                        <option value="Initial Phase">Initial Phase</option>
+                        <option value="Middle Phase">Middle Phase</option>
+                        <option value="Final Phase">Final Phase</option>
+                        <option value="Executed">Executed</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Audit Status</label>
+                    <select id="auditFilter">
+                        <option value="">All</option>
+                        <option value="pending_pre">Pending Pre-Audit</option>
+                        <option value="completed_pre">Pre-Audit Completed</option>
+                        <option value="pending_post">Pending Post-Audit</option>
+                        <option value="completed_post">Post-Audit Completed</option>
+                    </select>
                 </div>
             </div>
 
@@ -460,91 +400,66 @@
             </div>
             <form id="auditForm">
                 <div class="form-group">
-                    <label>📋 Requisition ID</label>
+                    <label>Requisition ID</label>
                     <input type="text" id="auditRequisitionId" readonly>
                 </div>
                 <div class="form-group">
-                    <label>🏪 Shop Name</label>
+                    <label>Shop Name</label>
                     <input type="text" id="auditShopName" readonly>
                 </div>
                 <div class="form-group">
-                    <label>⭐ Feedback *</label>
+                    <label>Feedback *</label>
                     <select id="auditFeedback" required>
                         <option value="">Select Feedback</option>
-                        <option value="Approved">✅ Approved</option>
-                        <option value="Approved with Comments">📝 Approved with Comments</option>
-                        <option value="Needs Revision">🔄 Needs Revision</option>
-                        <option value="Rejected">❌ Rejected</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Approved with Comments">Approved with Comments</option>
+                        <option value="Needs Revision">Needs Revision</option>
+                        <option value="Rejected">Rejected</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>📝 Description / Comments</label>
+                    <label>Description / Comments</label>
                     <textarea id="auditDescription" placeholder="Enter detailed description..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>📸 Upload Image</label>
+                    <label>Upload Image</label>
                     <input type="file" id="auditImage" accept="image/*">
                     <div class="image-preview" id="imagePreview">
                         <img id="previewImg" src="">
                     </div>
                 </div>
-                <button type="submit" class="audit-btn" style="width: 100%;">📤 Submit Audit</button>
+                <button type="submit" class="audit-btn" style="width: 100%;">Submit Audit</button>
             </form>
         </div>
     </div>
 
     <script>
         // ==================== CONFIGURATION ====================
-        // IMPORTANT: Replace this URL with your Apps Script Web App URL after deployment
-        const API_URL = "https://script.google.com/macros/s/AKfycbyIs1_c2vHLcZzpUS8mV1fmsBTOA1uHse4qg_mdpxMPacLV6QLKlZkIRGbi58P8jxPs/exec";
+        // REPLACE THIS WITH YOUR APPS SCRIPT URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbytRme2oS3ru1TfCsybCosOtYdp0KJaJqSE0B0M76oTifgVyYyCAWad5wisgIfj8Ftn/exec';
         
-        // Global variables
         let currentRequisitions = [];
         let currentAuditType = null;
         let currentRequisition = null;
         let sortColumn = '';
         let sortDirection = 'asc';
 
-        // ==================== UTILITY FUNCTIONS ====================
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString();
-            } catch(e) {
-                return dateString;
-            }
-        }
-
-        // ==================== AUTHENTICATION FUNCTIONS ====================
-        function checkAuth() {
+        // Helper: make API call - same pattern as working example
+        async function callAPI(action, data = {}) {
             const token = localStorage.getItem('btl_token');
-            if (!token) {
-                showPage('login');
-                return false;
-            }
+            if (token) data.token = token;
             
-            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
-            if (user.role !== 'Audit') {
-                alert('Access denied. Audit role required.');
-                logout();
-                return false;
-            }
+            const payload = { action: action, data: data };
             
-            document.getElementById('userName').textContent = `👋 Welcome, ${user.fullName || user.email}`;
-            showPage('dashboard');
-            loadRequisitions();
-            return true;
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            
+            return await response.json();
         }
 
-        // FIXED: Using GET method to avoid CORS issues
+        // Login - using same pattern as working example
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -555,49 +470,53 @@
             const loginLoading = document.getElementById('loginLoading');
             
             errorDiv.style.display = 'none';
-            errorDiv.textContent = '';
             loginForm.style.display = 'none';
             loginLoading.style.display = 'block';
             
             try {
-                // Use GET method with URL parameters to avoid CORS preflight
-                const url = `${API_URL}?path=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-                console.log('Attempting login to:', url);
+                const result = await callAPI('login', { email: email, password: password });
                 
-                const response = await fetch(url, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                
-                console.log('Response status:', response.status);
-                
-                const data = await response.json();
-                console.log('Response data:', data);
-                
-                if (data.success) {
-                    localStorage.setItem('btl_token', data.token);
-                    localStorage.setItem('btl_user', JSON.stringify(data.user));
+                if (result.success) {
+                    localStorage.setItem('btl_token', result.token);
+                    localStorage.setItem('btl_user', JSON.stringify(result.user));
                     checkAuth();
                 } else {
-                    errorDiv.textContent = data.error || 'Login failed. Please check your credentials.';
+                    errorDiv.textContent = result.error || 'Login failed';
                     errorDiv.style.display = 'block';
                     loginForm.style.display = 'block';
                     loginLoading.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Login error details:', error);
-                errorDiv.textContent = 'Network error: ' + error.message + '. Please check your connection and Apps Script URL.';
+                errorDiv.textContent = 'Error: ' + error.message;
                 errorDiv.style.display = 'block';
                 loginForm.style.display = 'block';
                 loginLoading.style.display = 'none';
             }
         }
 
+        function checkAuth() {
+            const token = localStorage.getItem('btl_token');
+            if (!token) {
+                showPage('login');
+                return false;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
+            if (user.role !== 'Audit') {
+                logout();
+                return false;
+            }
+            
+            document.getElementById('userName').textContent = `Welcome, ${user.fullName || user.email}`;
+            showPage('dashboard');
+            loadRequisitions();
+            return true;
+        }
+
         function logout() {
             localStorage.removeItem('btl_token');
             localStorage.removeItem('btl_user');
             showPage('login');
-            document.getElementById('loginForm').reset();
         }
 
         function showPage(page) {
@@ -613,45 +532,24 @@
             }
         }
 
-        // ==================== REQUISITION FUNCTIONS ====================
         async function loadRequisitions() {
-            const token = localStorage.getItem('btl_token');
             const tableContainer = document.getElementById('requisitionsTable');
-            
-            tableContainer.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading requisitions...</p>
-                </div>
-            `;
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading requisitions...</p></div>';
             
             try {
-                // Use GET method for better CORS compatibility
-                const response = await fetch(`${API_URL}?path=getRequisitions&token=${encodeURIComponent(token)}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
+                const result = await callAPI('getRequisitions', {});
                 
-                const data = await response.json();
-                
-                if (data.error) {
-                    if (data.error === 'Unauthorized') {
+                if (result.error) {
+                    if (result.error === 'Unauthorized') {
                         logout();
                     }
-                    throw new Error(data.error);
+                    throw new Error(result.error);
                 }
                 
-                currentRequisitions = data.requisitions || [];
+                currentRequisitions = result.requisitions || [];
                 applyFilters();
-                
             } catch (error) {
-                console.error('Error loading requisitions:', error);
-                tableContainer.innerHTML = `
-                    <div class="no-data">
-                        <p>❌ Error loading requisitions: ${error.message}</p>
-                        <button onclick="loadRequisitions()" class="audit-btn">🔄 Retry</button>
-                    </div>
-                `;
+                tableContainer.innerHTML = `<div class="no-data"><p>Error: ${error.message}</p><button onclick="loadRequisitions()" class="audit-btn">Retry</button></div>`;
             }
         }
 
@@ -661,18 +559,12 @@
             const auditFilter = document.getElementById('auditFilter').value;
             
             let filtered = currentRequisitions.filter(req => {
-                // Search filter
                 if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && 
                     !req.Shop_Name?.toLowerCase().includes(searchTerm)) {
                     return false;
                 }
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
                 
-                // Status filter
-                if (statusFilter && req.Execution_Status !== statusFilter) {
-                    return false;
-                }
-                
-                // Audit filter
                 if (auditFilter) {
                     const hasPreAudit = req.Pre_Audit_FeedBack && req.Pre_Audit_FeedBack !== '';
                     const hasPostAudit = req.Post_Audit_FeedBack && req.Post_Audit_FeedBack !== '';
@@ -692,21 +584,14 @@
                             break;
                     }
                 }
-                
                 return true;
             });
             
-            // Apply sorting
             if (sortColumn) {
                 filtered.sort((a, b) => {
                     let valA = a[sortColumn] || '';
                     let valB = b[sortColumn] || '';
-                    
-                    if (sortDirection === 'asc') {
-                        return valA > valB ? 1 : -1;
-                    } else {
-                        return valA < valB ? 1 : -1;
-                    }
+                    return sortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
                 });
             }
             
@@ -726,61 +611,46 @@
         function renderTable(requisitions) {
             const tableContainer = document.getElementById('requisitionsTable');
             
-            if (!requisitions || requisitions.length === 0) {
-                tableContainer.innerHTML = `
-                    <div class="no-data">
-                        <p>📭 No requisitions found</p>
-                    </div>
-                `;
+            if (!requisitions.length) {
+                tableContainer.innerHTML = '<div class="no-data"><p>No requisitions found</p></div>';
                 return;
             }
             
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th onclick="sortBy('Requisition_ID')">📋 Requisition ID ${sortColumn === 'Requisition_ID' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                            <th onclick="sortBy('Shop_Name')">🏪 Shop Name ${sortColumn === 'Shop_Name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                            <th onclick="sortBy('Brand')">🏷️ Brand ${sortColumn === 'Brand' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                            <th onclick="sortBy('Region')">📍 Region ${sortColumn === 'Region' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                            <th onclick="sortBy('Execution_Status')">⚙️ Execution Status ${sortColumn === 'Execution_Status' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}</th>
-                            <th>🔍 Pre-Audit</th>
-                            <th>✅ Post-Audit</th>
-                            <th>🎯 Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            let html = `<table><thead><tr>
+                <th onclick="sortBy('Requisition_ID')">Requisition ID</th>
+                <th onclick="sortBy('Shop_Name')">Shop Name</th>
+                <th onclick="sortBy('Brand')">Brand</th>
+                <th onclick="sortBy('Region')">Region</th>
+                <th onclick="sortBy('Execution_Status')">Execution Status</th>
+                <th>Pre-Audit</th>
+                <th>Post-Audit</th>
+                <th>Actions</th>
+            </tr></thead><tbody>`;
             
             requisitions.forEach(req => {
-                const preAuditStatus = req.Pre_Audit_FeedBack ? '✅ Completed' : (req.canPreAudit ? '⏳ Pending' : '🚫 Not Available');
-                const postAuditStatus = req.Post_Audit_FeedBack ? '✅ Completed' : '⏳ Pending';
-                
+                const preAuditStatus = req.Pre_Audit_FeedBack ? 'Completed' : (req.canPreAudit ? 'Pending' : 'Not Available');
+                const postAuditStatus = req.Post_Audit_FeedBack ? 'Completed' : 'Pending';
                 const preAuditClass = req.Pre_Audit_FeedBack ? 'badge-success' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
                 const postAuditClass = req.Post_Audit_FeedBack ? 'badge-success' : 'badge-warning';
                 
-                html += `
-                    <tr>
-                        <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
-                        <td>${escapeHtml(req.Shop_Name || '')}</td>
-                        <td>${escapeHtml(req.Brand || '')}</td>
-                        <td>${escapeHtml(req.Region || '')}</td>
-                        <td><span class="audit-badge badge-info">${escapeHtml(req.Execution_Status || '')}</span></td>
-                        <td><span class="audit-badge ${preAuditClass}">${preAuditStatus}</span></td>
-                        <td><span class="audit-badge ${postAuditClass}">${postAuditStatus}</span></td>
-                        <td>
-                `;
+                html += `<tr>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td>${escapeHtml(req.Brand || '')}</td>
+                    <td>${escapeHtml(req.Region || '')}</td>
+                    <td><span class="audit-badge badge-info">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="audit-badge ${preAuditClass}">${preAuditStatus}</span></td>
+                    <td><span class="audit-badge ${postAuditClass}">${postAuditStatus}</span></td>
+                    <td>`;
                 
                 if (req.canPreAudit && !req.Pre_Audit_FeedBack) {
-                    html += `<button class="audit-btn" onclick="openAuditModal('${req.Requisition_ID}', 'pre')">📝 Pre-Audit</button>`;
+                    html += `<button class="audit-btn" onclick="openAuditModal('${req.Requisition_ID}', 'pre')">Pre-Audit</button>`;
                 }
-                
                 if (req.canPostAudit && !req.Post_Audit_FeedBack) {
-                    html += `<button class="audit-btn audit-btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')">📋 Post-Audit</button>`;
+                    html += `<button class="audit-btn audit-btn-secondary" onclick="openAuditModal('${req.Requisition_ID}', 'post')">Post-Audit</button>`;
                 }
-                
                 if ((req.Pre_Audit_FeedBack || req.Post_Audit_FeedBack)) {
-                    html += `<button class="audit-btn audit-btn-success" onclick="viewAudit('${req.Requisition_ID}')">👁️ View</button>`;
+                    html += `<button class="audit-btn audit-btn-success" onclick="viewAudit('${req.Requisition_ID}')">View</button>`;
                 }
                 
                 html += `</td></tr>`;
@@ -790,7 +660,6 @@
             tableContainer.innerHTML = html;
         }
 
-        // ==================== AUDIT FUNCTIONS ====================
         function openAuditModal(requisitionId, type) {
             const req = currentRequisitions.find(r => r.Requisition_ID == requisitionId);
             if (!req) return;
@@ -798,7 +667,7 @@
             currentAuditType = type;
             currentRequisition = req;
             
-            document.getElementById('modalTitle').textContent = type === 'pre' ? '📝 Pre-Audit Form' : '📋 Post-Audit Form';
+            document.getElementById('modalTitle').textContent = type === 'pre' ? 'Pre-Audit Form' : 'Post-Audit Form';
             document.getElementById('auditRequisitionId').value = req.Requisition_ID;
             document.getElementById('auditShopName').value = req.Shop_Name;
             document.getElementById('auditFeedback').value = '';
@@ -809,30 +678,27 @@
             document.getElementById('auditModal').style.display = 'block';
         }
 
-        async function submitAudit(event) {
-            event.preventDefault();
+        document.getElementById('auditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            const token = localStorage.getItem('btl_token');
-            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
             const feedback = document.getElementById('auditFeedback').value;
             const description = document.getElementById('auditDescription').value;
             const imageFile = document.getElementById('auditImage').files[0];
+            const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
             
             if (!feedback) {
                 alert('Please select feedback');
                 return;
             }
             
-            // Show loading state
-            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = '⏳ Submitting...';
+            submitBtn.textContent = 'Submitting...';
             submitBtn.disabled = true;
             
             try {
                 let imageUrl = null;
                 
-                // Upload image if provided
                 if (imageFile) {
                     const reader = new FileReader();
                     const imageData = await new Promise((resolve) => {
@@ -840,101 +706,63 @@
                         reader.readAsDataURL(imageFile);
                     });
                     
-                    // Use POST for image upload (larger data)
-                    const uploadResponse = await fetch(`${API_URL}?path=uploadImage`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            token: token,
-                            imageData: imageData,
-                            fileName: imageFile.name,
-                            requisitionId: currentRequisition.Requisition_ID,
-                            auditType: currentAuditType
-                        })
+                    const uploadResult = await callAPI('uploadImage', {
+                        imageData: imageData,
+                        fileName: imageFile.name,
+                        requisitionId: currentRequisition.Requisition_ID,
+                        auditType: currentAuditType
                     });
                     
-                    const uploadData = await uploadResponse.json();
-                    if (uploadData.success) {
-                        imageUrl = uploadData.imageUrl;
+                    if (uploadResult.success) {
+                        imageUrl = uploadResult.imageUrl;
                     }
                 }
                 
-                // Submit audit data using GET for better CORS compatibility
                 const endpoint = currentAuditType === 'pre' ? 'submitPreAudit' : 'submitPostAudit';
-                const params = new URLSearchParams({
-                    path: endpoint,
-                    token: token,
+                const result = await callAPI(endpoint, {
                     requisitionId: currentRequisition.Requisition_ID,
                     feedback: feedback,
                     description: description,
-                    imageUrl: imageUrl || '',
+                    imageUrl: imageUrl,
                     auditorEmail: user.email
                 });
                 
-                const response = await fetch(`${API_URL}?${params.toString()}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    alert(`✅ ${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
+                if (result.success) {
+                    alert(`${currentAuditType === 'pre' ? 'Pre-audit' : 'Post-audit'} submitted successfully!`);
                     closeModal();
                     loadRequisitions();
                 } else {
-                    alert('❌ Error: ' + data.error);
+                    alert('Error: ' + result.error);
                 }
             } catch (error) {
-                alert('❌ Error: ' + error.message);
-                console.error('Submit error:', error);
+                alert('Error: ' + error.message);
             } finally {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
-        }
+        });
 
         async function viewAudit(requisitionId) {
-            const token = localStorage.getItem('btl_token');
-            
             try {
-                const response = await fetch(`${API_URL}?path=getAuditData&token=${encodeURIComponent(token)}&requisitionId=${encodeURIComponent(requisitionId)}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
+                const result = await callAPI('getAuditData', { requisitionId: requisitionId });
                 
-                const data = await response.json();
-                
-                if (data.success && data.auditData) {
-                    let message = '📋 AUDIT DETAILS\n\n';
+                if (result.success && result.auditData) {
+                    let message = 'AUDIT DETAILS\n\n';
                     
-                    if (data.auditData.preAudit.feedback) {
-                        message += '🔍 PRE-AUDIT:\n';
-                        message += `   Feedback: ${data.auditData.preAudit.feedback}\n`;
-                        message += `   Description: ${data.auditData.preAudit.description || 'N/A'}\n`;
-                        message += `   Date: ${formatDate(data.auditData.preAudit.date)}\n`;
-                        message += `   Auditor: ${data.auditData.preAudit.auditorEmail || 'N/A'}\n`;
-                        if (data.auditData.preAudit.imageUrl) {
-                            message += `   Image: ${data.auditData.preAudit.imageUrl}\n`;
-                        }
-                        message += '\n';
+                    if (result.auditData.preAudit.feedback) {
+                        message += 'PRE-AUDIT:\n';
+                        message += `Feedback: ${result.auditData.preAudit.feedback}\n`;
+                        message += `Description: ${result.auditData.preAudit.description || 'N/A'}\n`;
+                        message += `Date: ${result.auditData.preAudit.date || 'N/A'}\n`;
+                        message += `Auditor: ${result.auditData.preAudit.auditorEmail || 'N/A'}\n\n`;
                     }
                     
-                    if (data.auditData.postAudit.feedback) {
-                        message += '✅ POST-AUDIT:\n';
-                        message += `   Feedback: ${data.auditData.postAudit.feedback}\n`;
-                        message += `   Description: ${data.auditData.postAudit.description || 'N/A'}\n`;
-                        message += `   Date: ${formatDate(data.auditData.postAudit.date)}\n`;
-                        message += `   Auditor: ${data.auditData.postAudit.auditorEmail || 'N/A'}\n`;
-                        if (data.auditData.postAudit.imageUrl) {
-                            message += `   Image: ${data.auditData.postAudit.imageUrl}\n`;
-                        }
-                    }
-                    
-                    if (message === '📋 AUDIT DETAILS\n\n') {
-                        message = 'No audit data available for this requisition.';
+                    if (result.auditData.postAudit.feedback) {
+                        message += 'POST-AUDIT:\n';
+                        message += `Feedback: ${result.auditData.postAudit.feedback}\n`;
+                        message += `Description: ${result.auditData.postAudit.description || 'N/A'}\n`;
+                        message += `Date: ${result.auditData.postAudit.date || 'N/A'}\n`;
+                        message += `Auditor: ${result.auditData.postAudit.auditorEmail || 'N/A'}\n`;
                     }
                     
                     alert(message);
@@ -942,11 +770,10 @@
                     alert('No audit data found');
                 }
             } catch (error) {
-                alert('Error loading audit data: ' + error.message);
+                alert('Error: ' + error.message);
             }
         }
 
-        // Image preview
         document.getElementById('auditImage').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -965,22 +792,25 @@
             document.getElementById('imagePreview').style.display = 'none';
         }
 
-        // ==================== EVENT LISTENERS ====================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        document.getElementById('auditForm').addEventListener('submit', submitAudit);
         document.getElementById('searchInput').addEventListener('input', applyFilters);
         document.getElementById('statusFilter').addEventListener('change', applyFilters);
         document.getElementById('auditFilter').addEventListener('change', applyFilters);
         
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('auditModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+            if (event.target === modal) closeModal();
         }
         
-        // Initialize application
+        // Initialize
         checkAuth();
     </script>
 </body>
