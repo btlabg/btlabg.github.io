@@ -803,9 +803,15 @@
             
             const fySet = new Set();
             currentRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fyList = Array.from(fySet).sort().reverse();
             const fySelect = document.getElementById('fyFilter');
             fySelect.innerHTML = '<option value="">All FY</option>';
-            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            fyList.forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            // Set default FY to last/most recent
+            if (fyList.length > 0) {
+                fySelect.value = fyList[0]; // Most recent FY
+            }
             
             const typeSet = new Set();
             currentRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
@@ -813,7 +819,7 @@
             typeSelect.innerHTML = '<option value="">All Types</option>';
             Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
         }
-
+       
         function updateAuditStats() {
             let executionStatsHtml = '';
             for (const [status, count] of Object.entries(executionStats)) {
@@ -977,9 +983,15 @@
                 // Populate FY filter
                 const fySet = new Set();
                 currentMarketingRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+                const fyList = Array.from(fySet).sort().reverse();
                 const fySelect = document.getElementById('marketingFyFilter');
                 fySelect.innerHTML = '<option value="">All FY</option>';
-                Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+                fyList.forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+                
+                // Set default FY to last/most recent
+                if (fyList.length > 0) {
+                    fySelect.value = fyList[0];
+                }
                 
                 // Populate Type filter
                 const typeSet = new Set();
@@ -1000,7 +1012,7 @@
                 tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadMarketingData()" class="btn btn-primary">Retry</button></div>`;
             }
         }
-
+        
         function filterMarketingByExecutionStatus(status) {
             document.getElementById('marketingStatusFilter').value = status;
             applyMarketingFilters();
@@ -1293,18 +1305,24 @@
                 }
                 currentHosRequisitions = result.requisitions || [];
                 hosExecutionStatusOptions = result.executionStatuses || [];
-                hosRegionOptions = result.regions || [];
-                hosExecutionStats = result.executionStats || {};
-                hosStats = result.stats || {};
                 
                 populateHosFilters();
+                
+                // Apply default FY after filters are populated
+                const fySelect = document.getElementById('hosFyFilter');
+                if (fySelect && fySelect.options.length > 1) {
+                    // Select the first FY option (which is the most recent after sorting)
+                    fySelect.selectedIndex = 1; // Skip the "All FY" option
+                }
+                
                 updateHosStats();
                 applyHosFilters();
             } catch (error) {
                 tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadHeadOfSalesData()" class="btn btn-primary">Retry</button></div>`;
             }
         }
-
+       
+       
         async function loadHeadOfSalesStats() {
             try {
                 const result = await callAPI('getHeadOfSalesStats', {});
@@ -1334,31 +1352,33 @@
         }
 
         function populateHosFilters() {
-            // Status filter
             const statusSelect = document.getElementById('hosStatusFilter');
             statusSelect.innerHTML = '<option value="">All</option>';
             hosExecutionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
             
-            // Region filter
             const regionSelect = document.getElementById('hosRegionFilter');
             regionSelect.innerHTML = '<option value="">All Regions</option>';
             hosRegionOptions.forEach(region => { regionSelect.innerHTML += `<option value="${region}">${region}</option>`; });
             
-            // FY filter
             const fySet = new Set();
             currentHosRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fyList = Array.from(fySet).sort().reverse();
             const fySelect = document.getElementById('hosFyFilter');
             fySelect.innerHTML = '<option value="">All FY</option>';
-            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            fyList.forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
             
-            // Type filter
+            // Set default FY to last/most recent
+            if (fyList.length > 0) {
+                fySelect.value = fyList[0];
+            }
+            
             const typeSet = new Set();
             currentHosRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
             const typeSelect = document.getElementById('hosTypeFilter');
             typeSelect.innerHTML = '<option value="">All Types</option>';
             Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
         }
-
+                
         function updateHosStats() {
             let executionStatsHtml = '';
             for (const [status, count] of Object.entries(hosExecutionStats)) {
@@ -1500,7 +1520,8 @@
                 tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadScmData()" class="btn btn-primary">Retry</button></div>`;
             }
         }
-        
+       
+       
         async function loadScmStats() {
             try {
                 const result = await callAPI('getScmStats', {});
@@ -1547,19 +1568,17 @@
             statusSelect.innerHTML = '<option value="">All</option>';
             scmExecutionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
             
-            const regionSelect = document.getElementById('scmRegionFilter');
-            regionSelect.innerHTML = '<option value="">All Regions</option>';
-            scmRegionOptions.forEach(region => { regionSelect.innerHTML += `<option value="${region}">${region}</option>`; });
-            
-            const areaSelect = document.getElementById('scmAreaFilter');
-            areaSelect.innerHTML = '<option value="">All Areas</option>';
-            scmAreaOptions.forEach(area => { areaSelect.innerHTML += `<option value="${area}">${area}</option>`; });
-            
             const fySet = new Set();
             currentScmRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fyList = Array.from(fySet).sort().reverse();
             const fySelect = document.getElementById('scmFyFilter');
             fySelect.innerHTML = '<option value="">All FY</option>';
-            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            fyList.forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            // Set default FY to last/most recent
+            if (fyList.length > 0) {
+                fySelect.value = fyList[0];
+            }
             
             const typeSet = new Set();
             currentScmRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
@@ -1567,7 +1586,8 @@
             typeSelect.innerHTML = '<option value="">All Types</option>';
             Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
         }
-
+        
+        
         function filterScmByExecutionStatus(status) {
             document.getElementById('scmStatusFilter').value = status;
             applyScmFilters();
@@ -1795,7 +1815,7 @@
                 tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadRegionalData()" class="btn btn-primary">Retry</button></div>`;
             }
         }
-
+        
         async function loadRegionalStats() {
             try {
                 const result = await callAPI('getRegionalStats', {});
@@ -1844,9 +1864,15 @@
             
             const fySet = new Set();
             currentRegionalRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fyList = Array.from(fySet).sort().reverse();
             const fySelect = document.getElementById('regionalFyFilter');
             fySelect.innerHTML = '<option value="">All FY</option>';
-            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            fyList.forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            // Set default FY to last/most recent
+            if (fyList.length > 0) {
+                fySelect.value = fyList[0];
+            }
             
             const typeSet = new Set();
             currentRegionalRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
@@ -1854,7 +1880,7 @@
             typeSelect.innerHTML = '<option value="">All Types</option>';
             Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
         }
-
+        
         function filterRegionalByExecutionStatus(status) {
             document.getElementById('regionalStatusFilter').value = status;
             applyRegionalFilters();
@@ -1941,6 +1967,23 @@
             }
             html += '</tbody></table>';
             tableContainer.innerHTML = html;
+        }
+
+        // ==================== DEFAULT FY FILTER FUNCTIONS ====================
+
+        function getLastFY(fyList) {
+            if (!fyList || fyList.length === 0) return '';
+            // Sort FY values in descending order and get the first one
+            const sortedFY = [...fyList].sort().reverse();
+            return sortedFY[0];
+        }
+
+        function setDefaultFYFilter(fySelectElement, fyList) {
+            if (!fySelectElement || !fyList || fyList.length === 0) return;
+            const lastFY = getLastFY(fyList);
+            if (lastFY) {
+                fySelectElement.value = lastFY;
+            }
         }
 
         // ==================== COMMON FUNCTIONS ====================
