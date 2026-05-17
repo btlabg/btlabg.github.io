@@ -99,6 +99,40 @@
         .image-preview { max-width: 150px; margin-top: 8px; display: none; }
         .image-preview img { max-width: 100%; border-radius: 10px; }
         
+        .download-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
         .loading { text-align: center; padding: 40px; }
         .spinner { width: 40px; height: 40px; border: 3px solid #e5e7eb; border-top-color: #1a73e8; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -149,13 +183,23 @@
 
     <div id="dashboardPage" class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-chart-line"></i> BTL Management System - AkijBashir Group</h1>
-            <div class="user-info">
-                <i class="fas fa-user-circle"></i>
-                <span id="userName"></span>
-                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <h1><i class="fas fa-chart-line"></i> BTL Management - AkijBashir Group</h1>
+            <div class="header-actions">
+                <button id="changePasswordBtn" class="btn btn-outline" style="background: transparent; border-color: white; color: white;" onclick="openPasswordModal()">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
+                <button id="downloadBtn" class="download-btn" onclick="downloadExcel()">
+                    <i class="fas fa-download"></i> Download Excel
+                </button>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userName"></span>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
             </div>
         </div>
+
+
 
         <div class="main-content">
             <div class="main-container">
@@ -227,6 +271,139 @@
                     </div>
                     <div class="requisitions-container">
                         <div id="marketingRequisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+                    </div>
+                </div>
+                <!-- Head of Sales Dashboard Content -->
+                <div id="headOfSalesContent" style="display: none;">
+                    <div class="stats-container" id="headOfSalesStatsContainer"></div>
+                    <div class="filters">
+                        <div class="filter-item">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" id="hosSearchInput" placeholder="ID / Shop...">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> FY</label>
+                            <select id="hosFyFilter"><option value="">All FY</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select id="hosTypeFilter"><option value="">All Types</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-location-dot"></i> Region</label>
+                            <select id="hosRegionFilter"><option value="">All Regions</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-chart-simple"></i> Execution Status</label>
+                            <select id="hosStatusFilter"><option value="">All</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-check-circle"></i> Audit Filter</label>
+                            <select id="hosAuditFilter">
+                                <option value="">All</option>
+                                <option value="pending_pre">Pending Pre-Audit</option>
+                                <option value="completed_pre">Pre-Audit Completed</option>
+                                <option value="pending_post">Pending Post-Audit</option>
+                                <option value="completed_post">Post-Audit Completed</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="requisitions-container">
+                        <div id="hosRequisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+                    </div>
+                </div>
+                <!-- SCM Dashboard Content -->
+                <div id="scmContent" style="display: none;">
+                    <div class="stats-container" id="scmStatsContainer"></div>
+                    <div class="filters">
+                        <div class="filter-item">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" id="scmSearchInput" placeholder="ID / Shop...">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> FY</label>
+                            <select id="scmFyFilter"><option value="">All FY</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select id="scmTypeFilter"><option value="">All Types</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-location-dot"></i> Region</label>
+                            <select id="scmRegionFilter"><option value="">All Regions</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-map-marker-alt"></i> Area</label>
+                            <select id="scmAreaFilter"><option value="">All Areas</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-chart-simple"></i> Execution Status</label>
+                            <select id="scmStatusFilter"><option value="">All</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-truck"></i> MKT Status</label>
+                            <select id="scmMktStatusFilter">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-check-circle"></i> Audit Filter</label>
+                            <select id="scmAuditFilter">
+                                <option value="">All</option>
+                                <option value="pending_pre">Pending Pre-Audit</option>
+                                <option value="completed_pre">Pre-Audit Completed</option>
+                                <option value="pending_post">Pending Post-Audit</option>
+                                <option value="completed_post">Post-Audit Completed</option>
+                                <option value="needs_revision">Needs Revision</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="requisitions-container">
+                        <div id="scmRequisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+                    </div>
+                </div>
+                <!-- Regional Dashboard (RM & AM) -->
+                <div id="regionalContent" style="display: none;">
+                    <div class="stats-container" id="regionalStatsContainer"></div>
+                    <div class="filters">
+                        <div class="filter-item">
+                            <label><i class="fas fa-search"></i> Search</label>
+                            <input type="text" id="regionalSearchInput" placeholder="ID / Shop...">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> FY</label>
+                            <select id="regionalFyFilter"><option value="">All FY</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select id="regionalTypeFilter"><option value="">All Types</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-chart-simple"></i> Execution Status</label>
+                            <select id="regionalStatusFilter"><option value="">All</option></select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-check-circle"></i> Audit Filter</label>
+                            <select id="regionalAuditFilter">
+                                <option value="">All</option>
+                                <option value="pending_pre">Pending Pre-Audit</option>
+                                <option value="completed_pre">Pre-Audit Completed</option>
+                                <option value="pending_post">Pending Post-Audit</option>
+                                <option value="completed_post">Post-Audit Completed</option>
+                                <option value="needs_revision">Needs Revision</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="requisitions-container">
+                        <div id="regionalRequisitionsTable"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
                     </div>
                 </div>
             </div>
@@ -365,7 +542,40 @@
             <div id="detailsContent" class="details-grid"></div>
         </div>
     </div>
-
+    <!-- Password Change Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Change Password</h2>
+                <span class="close" onclick="closePasswordModal()">&times;</span>
+            </div>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Current Password</label>
+                    <input type="password" id="currentPassword" required placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> New Password</label>
+                    <input type="password" id="newPassword" required placeholder="Enter new password (min 6 characters)">
+                    <small style="color: #6b7280; font-size: 11px;">Minimum 6 characters</small>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Confirm New Password</label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirm new password">
+                </div>
+                <div id="passwordError" class="error-message" style="display: none; background: #fee; color: #c33; padding: 10px; border-radius: 8px; margin-bottom: 16px;"></div>
+                <div id="passwordSuccess" class="success-message" style="display: none; background: #d1fae5; color: #065f46; padding: 10px; border-radius: 8px; margin-bottom: 16px;"></div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Change Password
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()" style="flex: 1;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Developer Modal -->
     <div id="developerModal" class="modal">
         <div class="modal-content" style="max-width: 450px;">
@@ -379,7 +589,7 @@
 
     <script>
         // ==================== CONFIGURATION ====================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzbHNhPCFoWxTTUiYOM-AF7lB_QL_J0_U-mn6XlD574S5zCB5YnbeWHp0rLhdI6oI-u/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw8x1Zy2Vo6-CAkKZfFaG4TXgn5aEQ18z0pxmzKuDTqotdnL8-G1M3bTYFIttQ0iQgR/exec';
         
         let currentRequisitions = [];
         let currentMarketingRequisitions = [];
@@ -489,16 +699,24 @@
                 loginLoading.style.display = 'none';
             }
         }
-
         function checkAuth() {
             const token = localStorage.getItem('btl_token');
             if (!token) { showPage('login'); return false; }
             const user = JSON.parse(localStorage.getItem('btl_user') || '{}');
             currentUserRole = user.role;
             
-            if (user.role !== 'Audit' && user.role !== 'Marketing') { logout(); return false; }
+            const allowedRoles = ['Audit', 'Marketing', 'Head_Of_Sales', 'SCM', 'RM', 'AM'];
+            if (!allowedRoles.includes(user.role)) { logout(); return false; }
             
-            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${user.fullName || user.email} (${user.role})`;
+            let roleDisplay = user.role;
+            if (user.role === 'Head_Of_Sales' && user.brand) {
+                roleDisplay = `Head Of Sales (${user.brand})`;
+            } else if (user.role === 'RM' && user.brand && user.region) {
+                roleDisplay = `Regional Manager (${user.brand} - ${user.region})`;
+            } else if (user.role === 'AM' && user.brand && user.region && user.area) {
+                roleDisplay = `Area Manager (${user.brand} - ${user.region} - ${user.area})`;
+            }
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${user.fullName || user.email} (${roleDisplay})`;
             
             getDeveloperInfo().then(devInfo => {
                 document.getElementById('developerName').textContent = devInfo && devInfo.success ? devInfo.name : 'Towfik Omor';
@@ -507,19 +725,36 @@
             showPage('dashboard');
             setupScrollListener();
             
+            // Hide all content first
+            document.getElementById('auditContent').style.display = 'none';
+            document.getElementById('marketingContent').style.display = 'none';
+            document.getElementById('headOfSalesContent').style.display = 'none';
+            document.getElementById('scmContent').style.display = 'none';
+            document.getElementById('regionalContent').style.display = 'none';
+            
             if (user.role === 'Audit') {
                 document.getElementById('auditContent').style.display = 'block';
-                document.getElementById('marketingContent').style.display = 'none';
                 loadRequisitions();
             } else if (user.role === 'Marketing') {
-                document.getElementById('auditContent').style.display = 'none';
                 document.getElementById('marketingContent').style.display = 'block';
                 loadMarketingData();
                 loadMarketingStats();
+            } else if (user.role === 'Head_Of_Sales') {
+                document.getElementById('headOfSalesContent').style.display = 'block';
+                loadHeadOfSalesData();
+                loadHeadOfSalesStats();
+            } else if (user.role === 'SCM') {
+                document.getElementById('scmContent').style.display = 'block';
+                loadScmData();
+                loadScmStats();
+            } else if (user.role === 'RM' || user.role === 'AM') {
+                document.getElementById('regionalContent').style.display = 'block';
+                loadRegionalData();
+                loadRegionalStats();
             }
             return true;
         }
-
+        
         function logout() {
             localStorage.removeItem('btl_token');
             localStorage.removeItem('btl_user');
@@ -1037,6 +1272,676 @@
                 alert('Error loading audit details');
             }
         }
+        // ==================== HEAD OF SALES FUNCTIONS ====================
+        let currentHosRequisitions = [];
+        let hosSortColumn = 'Requisition_ID';
+        let hosSortDirection = 'desc';
+        let hosExecutionStatusOptions = [];
+        let hosRegionOptions = [];
+        let hosStats = {};
+        let hosExecutionStats = {};
+
+        async function loadHeadOfSalesData() {
+            const tableContainer = document.getElementById('hosRequisitionsTable');
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+            
+            try {
+                const result = await callAPI('getHeadOfSalesRequisitions', {});
+                if (result.error) {
+                    if (result.error === 'Unauthorized') logout();
+                    throw new Error(result.error);
+                }
+                currentHosRequisitions = result.requisitions || [];
+                hosExecutionStatusOptions = result.executionStatuses || [];
+                hosRegionOptions = result.regions || [];
+                hosExecutionStats = result.executionStats || {};
+                hosStats = result.stats || {};
+                
+                populateHosFilters();
+                updateHosStats();
+                applyHosFilters();
+            } catch (error) {
+                tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadHeadOfSalesData()" class="btn btn-primary">Retry</button></div>`;
+            }
+        }
+
+        async function loadHeadOfSalesStats() {
+            try {
+                const result = await callAPI('getHeadOfSalesStats', {});
+                if (result.success) {
+                    const stats = result.stats;
+                    document.getElementById('hosUserBrand').innerHTML = `<i class="fas fa-building"></i> Brand: ${result.userBrand}`;
+                    
+                    let executionStatsHtml = '';
+                    for (const [status, count] of Object.entries(stats.executionStatus)) {
+                        executionStatsHtml += `<div class="stat-card" onclick="filterHosByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+                    }
+                    
+                    let regionStatsHtml = '';
+                    for (const [region, count] of Object.entries(stats.region)) {
+                        regionStatsHtml += `<div class="stat-card" onclick="filterHosByRegion('${region}')"><div class="stat-icon"><i class="fas fa-location-dot"></i></div><div class="stat-info"><h3>${escapeHtml(region)}</h3><div class="stat-number">${count}</div></div></div>`;
+                    }
+                    
+                    document.getElementById('headOfSalesStatsContainer').innerHTML = `
+                        <div class="stat-card" onclick="filterHosByAuditFilter('')"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${stats.total || 0}</div></div></div>
+                        ${executionStatsHtml}
+                        ${regionStatsHtml}
+                        <div class="stat-card" onclick="filterHosByAuditFilter('needs_revision')"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>Need Revision</h3><div class="stat-number">${stats.needRevision || 0}</div></div></div>
+                        <div class="stat-card" onclick="filterHosByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${stats.resolved || 0}</div></div></div>
+                    `;
+                }
+            } catch (error) { console.error('Error loading Head of Sales stats:', error); }
+        }
+
+        function populateHosFilters() {
+            // Status filter
+            const statusSelect = document.getElementById('hosStatusFilter');
+            statusSelect.innerHTML = '<option value="">All</option>';
+            hosExecutionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
+            
+            // Region filter
+            const regionSelect = document.getElementById('hosRegionFilter');
+            regionSelect.innerHTML = '<option value="">All Regions</option>';
+            hosRegionOptions.forEach(region => { regionSelect.innerHTML += `<option value="${region}">${region}</option>`; });
+            
+            // FY filter
+            const fySet = new Set();
+            currentHosRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fySelect = document.getElementById('hosFyFilter');
+            fySelect.innerHTML = '<option value="">All FY</option>';
+            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            // Type filter
+            const typeSet = new Set();
+            currentHosRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
+            const typeSelect = document.getElementById('hosTypeFilter');
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+            Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
+        }
+
+        function updateHosStats() {
+            let executionStatsHtml = '';
+            for (const [status, count] of Object.entries(hosExecutionStats)) {
+                executionStatsHtml += `<div class="stat-card" onclick="filterHosByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+            }
+            
+            document.getElementById('headOfSalesStatsContainer').innerHTML = `
+                <div class="stat-card" onclick="filterHosByAuditFilter('')"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${hosStats.total || 0}</div></div></div>
+                ${executionStatsHtml}
+                <div class="stat-card" onclick="filterHosByAuditFilter('pending_pre')"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h3>Pending Pre</h3><div class="stat-number">${hosStats.pendingPre || 0}</div></div></div>
+                <div class="stat-card" onclick="filterHosByAuditFilter('pending_post')"><div class="stat-icon"><i class="fas fa-hourglass-half"></i></div><div class="stat-info"><h3>Pending Post</h3><div class="stat-number">${hosStats.pendingPost || 0}</div></div></div>
+                <div class="stat-card" onclick="filterHosByAuditFilter('audit_done')"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3>Audit Done</h3><div class="stat-number">${hosStats.auditDone || 0}</div></div></div>
+                <div class="stat-card" onclick="filterHosByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${hosStats.resolved || 0}</div></div></div>
+            `;
+        }
+
+        function filterHosByExecutionStatus(status) {
+            document.getElementById('hosStatusFilter').value = status;
+            applyHosFilters();
+        }
+
+        function filterHosByRegion(region) {
+            document.getElementById('hosRegionFilter').value = region;
+            applyHosFilters();
+        }
+
+        function filterHosByAuditFilter(filter) {
+            document.getElementById('hosAuditFilter').value = filter;
+            applyHosFilters();
+        }
+
+        function applyHosFilters() {
+            const searchTerm = document.getElementById('hosSearchInput').value.toLowerCase();
+            const fyFilter = document.getElementById('hosFyFilter').value;
+            const typeFilter = document.getElementById('hosTypeFilter').value;
+            const regionFilter = document.getElementById('hosRegionFilter').value;
+            const statusFilter = document.getElementById('hosStatusFilter').value;
+            const auditFilter = document.getElementById('hosAuditFilter').value;
+            
+            let filtered = currentHosRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (regionFilter && req.Region !== regionFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'audit_done' && !req.Pre_Audit_FeedBack && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                if (auditFilter === 'needs_revision' && !req.needsRevision) return false;
+                return true;
+            });
+            
+            filtered.sort((a, b) => {
+                let valA = a[hosSortColumn] || '';
+                let valB = b[hosSortColumn] || '';
+                return hosSortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
+            });
+            
+            renderHosTable(filtered);
+        }
+
+        function sortHos(column) {
+            if (hosSortColumn === column) { hosSortDirection = hosSortDirection === 'asc' ? 'desc' : 'asc'; }
+            else { hosSortColumn = column; hosSortDirection = 'asc'; }
+            applyHosFilters();
+        }
+
+        function renderHosTable(requisitions) {
+            const tableContainer = document.getElementById('hosRequisitionsTable');
+            if (!requisitions.length) { tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No data found</p></div>'; return; }
+            
+            let html = '<table class="data-table"><thead><tr>';
+            html += '<th onclick="sortHos(\'Requisition_ID\')">ID ' + (hosSortColumn === 'Requisition_ID' ? (hosSortDirection === 'asc' ? '↑' : '↓') : '') + '</th>';
+            html += '<th onclick="sortHos(\'ALL_FY\')">FY</th><th onclick="sortHos(\'Type\')">Type</th><th onclick="sortHos(\'Job_Type\')">Job Type</th>';
+            html += '<th onclick="sortHos(\'Shop_Name\')">Shop Name</th><th>Brand</th><th onclick="sortHos(\'Region\')">Region</th><th onclick="sortHos(\'Execution_Status\')">Status</th>';
+            html += '<th>Pre-Audit</th><th>Post-Audit</th><th>Resolution</th><th>Actions</th>';
+            html += '</thead><tbody>';
+            
+            for (const req of requisitions) {
+                const preStatus = req.Pre_Audit_FeedBack ? 'Done' : (req.canPreAudit ? 'Pending' : 'N/A');
+                const postStatus = req.Post_Audit_FeedBack ? 'Done' : 'Pending';
+                const preClass = req.Pre_Audit_FeedBack ? 'badge-info' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
+                const postClass = req.Post_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const resolutionStatus = req.isResolved ? '<span class="badge badge-success">Resolved</span>' : (req.needsRevision ? '<span class="badge badge-warning">Needs Revision</span>' : '<span class="badge badge-info">No Action</span>');
+                
+                html += `<tr>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || '-')}</span></td>
+                    <td>${escapeHtml(req.Type || '-')}</td>
+                    <td>${escapeHtml(req.Job_Type || '-')}</td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td>${escapeHtml(req.Brand || '')}</td>
+                    <td>${escapeHtml(req.Region || '')}</td>
+                    <td><span class="badge ${req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info'}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${preClass}">${preStatus}</span></td>
+                    <td><span class="badge ${postClass}">${postStatus}</span></td>
+                    <td>${resolutionStatus}</td>
+                    <td>
+                        <button class="btn btn-outline" onclick="showDetails('${escapeHtml(req.Requisition_ID)}')" title="Details"><i class="fas fa-info-circle"></i></button>
+                        ${(req.canPreAudit && !req.Pre_Audit_FeedBack) ? `<button class="btn btn-primary" onclick="openAuditModal('${escapeHtml(req.Requisition_ID)}', 'pre')" title="Pre-Audit"><i class="fas fa-clipboard"></i></button>` : ''}
+                        ${(req.canPostAudit && !req.Post_Audit_FeedBack) ? `<button class="btn btn-secondary" onclick="openAuditModal('${escapeHtml(req.Requisition_ID)}', 'post')" title="Post-Audit"><i class="fas fa-clipboard-list"></i></button>` : ''}
+                        ${req.isResolved ? `<button class="btn btn-success" onclick="viewResolution('${escapeHtml(req.Requisition_ID)}')" title="View Resolution"><i class="fas fa-check-double"></i></button>` : ''}
+                    </div>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        // ==================== SCM FUNCTIONS ====================
+        let currentScmRequisitions = [];
+        let scmSortColumn = 'Requisition_ID';
+        let scmSortDirection = 'desc';
+        let scmExecutionStatusOptions = [];
+        let scmRegionOptions = [];
+        let scmAreaOptions = [];
+
+        async function loadScmData() {
+            const tableContainer = document.getElementById('scmRequisitionsTable');
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+            
+            try {
+                const result = await callAPI('getScmRequisitions', {});
+                if (result.error) {
+                    if (result.error === 'Unauthorized') logout();
+                    throw new Error(result.error);
+                }
+                currentScmRequisitions = result.requisitions || [];
+                scmExecutionStatusOptions = result.executionStatuses || [];
+                
+                populateScmFilters();
+                updateScmStats(result.stats, result.executionStats);
+                applyScmFilters();
+            } catch (error) {
+                tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadScmData()" class="btn btn-primary">Retry</button></div>`;
+            }
+        }
+        
+        async function loadScmStats() {
+            try {
+                const result = await callAPI('getScmStats', {});
+                if (result.success) {
+                    updateScmStats(result.stats, {});
+                }
+            } catch (error) { console.error('Error loading SCM stats:', error); }
+        }
+
+        function updateScmStats(stats, executionStats) {
+            let executionStatsHtml = '';
+            
+            // Display Execution Status stats only
+            const statusOrder = ['Executed', 'Final Phase', 'Yet to Start', 'Middle Phase', 'Design Phase', 'Initial Phase'];
+            
+            // First show Total
+            executionStatsHtml += `<div class="stat-card" onclick="filterScmByExecutionStatus('')"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${stats.total || 0}</div></div></div>`;
+            
+            // Then show Execution Status in specific order
+            for (const status of statusOrder) {
+                if (executionStats && executionStats[status]) {
+                    executionStatsHtml += `<div class="stat-card" onclick="filterScmByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${executionStats[status]}</div></div></div>`;
+                }
+            }
+            
+            // Show any remaining statuses not in the ordered list
+            if (executionStats) {
+                for (const [status, count] of Object.entries(executionStats)) {
+                    if (!statusOrder.includes(status) && status !== 'Unknown') {
+                        executionStatsHtml += `<div class="stat-card" onclick="filterScmByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+                    }
+                }
+            }
+            
+            document.getElementById('scmStatsContainer').innerHTML = `
+                ${executionStatsHtml}
+                <div class="stat-card" onclick="filterScmByAuditFilter('needs_revision')"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>Need Revision</h3><div class="stat-number">${stats.needRevision || 0}</div></div></div>
+                <div class="stat-card" onclick="filterScmByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${stats.resolved || 0}</div></div></div>
+            `;
+        }
+
+        function populateScmFilters() {
+            const statusSelect = document.getElementById('scmStatusFilter');
+            statusSelect.innerHTML = '<option value="">All</option>';
+            scmExecutionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
+            
+            const regionSelect = document.getElementById('scmRegionFilter');
+            regionSelect.innerHTML = '<option value="">All Regions</option>';
+            scmRegionOptions.forEach(region => { regionSelect.innerHTML += `<option value="${region}">${region}</option>`; });
+            
+            const areaSelect = document.getElementById('scmAreaFilter');
+            areaSelect.innerHTML = '<option value="">All Areas</option>';
+            scmAreaOptions.forEach(area => { areaSelect.innerHTML += `<option value="${area}">${area}</option>`; });
+            
+            const fySet = new Set();
+            currentScmRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fySelect = document.getElementById('scmFyFilter');
+            fySelect.innerHTML = '<option value="">All FY</option>';
+            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            const typeSet = new Set();
+            currentScmRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
+            const typeSelect = document.getElementById('scmTypeFilter');
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+            Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
+        }
+
+        function filterScmByExecutionStatus(status) {
+            document.getElementById('scmStatusFilter').value = status;
+            applyScmFilters();
+        }
+
+        function filterScmByRegion(region) {
+            document.getElementById('scmRegionFilter').value = region;
+            applyScmFilters();
+        }
+
+        function filterScmByArea(area) {
+            document.getElementById('scmAreaFilter').value = area;
+            applyScmFilters();
+        }
+
+        function filterScmByAuditFilter(filter) {
+            document.getElementById('scmAuditFilter').value = filter;
+            applyScmFilters();
+        }
+
+        function applyScmFilters() {
+            const searchTerm = document.getElementById('scmSearchInput').value.toLowerCase();
+            const fyFilter = document.getElementById('scmFyFilter').value;
+            const typeFilter = document.getElementById('scmTypeFilter').value;
+            const regionFilter = document.getElementById('scmRegionFilter').value;
+            const areaFilter = document.getElementById('scmAreaFilter').value;
+            const statusFilter = document.getElementById('scmStatusFilter').value;
+            const mktStatusFilter = document.getElementById('scmMktStatusFilter').value;
+            const auditFilter = document.getElementById('scmAuditFilter').value;
+            
+            let filtered = currentScmRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (regionFilter && req.Region !== regionFilter) return false;
+                if (areaFilter && req.Area !== areaFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                if (mktStatusFilter && req.MKT_Status !== mktStatusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'needs_revision' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+            
+            filtered.sort((a, b) => {
+                let valA = a[scmSortColumn] || '';
+                let valB = b[scmSortColumn] || '';
+                return scmSortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
+            });
+            
+            renderScmTable(filtered);
+        }
+
+        function sortScm(column) {
+            if (scmSortColumn === column) { scmSortDirection = scmSortDirection === 'asc' ? 'desc' : 'asc'; }
+            else { scmSortColumn = column; scmSortDirection = 'asc'; }
+            applyScmFilters();
+        }
+
+        function renderScmTable(requisitions) {
+            const tableContainer = document.getElementById('scmRequisitionsTable');
+            if (!requisitions.length) { tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No data found</p></div>'; return; }
+            
+            let html = '<table class="data-table"><thead><tr>';
+            html += '<th onclick="sortScm(\'Requisition_ID\')">ID ' + (scmSortColumn === 'Requisition_ID' ? (scmSortDirection === 'asc' ? '↑' : '↓') : '') + '</th>';
+            html += '<th onclick="sortScm(\'ALL_FY\')">FY</th><th onclick="sortScm(\'Type\')">Type</th><th onclick="sortScm(\'Job_Type\')">Job Type</th>';
+            html += '<th onclick="sortScm(\'Shop_Name\')">Shop Name</th><th>Brand</th><th onclick="sortScm(\'Region\')">Region</th><th onclick="sortScm(\'Area\')">Area</th>';
+            html += '<th onclick="sortScm(\'Execution_Status\')">Status</th><th>MKT Status</th><th>Pre-Audit</th><th>Post-Audit</th><th>Resolution</th><th>Actions</th>';
+            html += '</thead><tbody>';
+            
+            for (const req of requisitions) {
+                const preStatus = req.Pre_Audit_FeedBack ? 'Done' : (req.canPreAudit ? 'Pending' : 'N/A');
+                const postStatus = req.Post_Audit_FeedBack ? 'Done' : 'Pending';
+                const preClass = req.Pre_Audit_FeedBack ? 'badge-info' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
+                const postClass = req.Post_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const resolutionStatus = req.isResolved ? '<span class="badge badge-success">Resolved</span>' : (req.needsRevision ? '<span class="badge badge-warning">Needs Revision</span>' : '<span class="badge badge-info">No Action</span>');
+                const mktStatusClass = req.MKT_Status === 'Completed' ? 'badge-success' : (req.MKT_Status === 'In Progress' ? 'badge-warning' : 'badge-info');
+                
+                html += `<tr>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || '-')}</span></td>
+                    <td>${escapeHtml(req.Type || '-')}</td>
+                    <td>${escapeHtml(req.Job_Type || '-')}</td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td>${escapeHtml(req.Brand || '')}</td>
+                    <td>${escapeHtml(req.Region || '')}</td>
+                    <td>${escapeHtml(req.Area || '')}</td>
+                    <td><span class="badge ${req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info'}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${mktStatusClass}">${escapeHtml(req.MKT_Status || 'Pending')}</span></td>
+                    <td><span class="badge ${preClass}">${preStatus}</span></td>
+                    <td><span class="badge ${postClass}">${postStatus}</span></td>
+                    <td>${resolutionStatus}</td>
+                    <td>
+                        <button class="btn btn-outline" onclick="showDetails('${escapeHtml(req.Requisition_ID)}')" title="Details"><i class="fas fa-info-circle"></i></button>
+                        <button class="btn btn-primary" onclick="openScmEditModal('${escapeHtml(req.Requisition_ID)}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        ${req.isResolved ? `<button class="btn btn-success" onclick="viewResolution('${escapeHtml(req.Requisition_ID)}')" title="View Resolution"><i class="fas fa-check-double"></i></button>` : ''}
+                    </div>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
+
+        function openScmEditModal(requisitionId) {
+            const req = currentScmRequisitions.find(r => r.Requisition_ID == requisitionId);
+            if (!req) return;
+            
+            // Create modal for SCM edit (limited fields)
+            const modalHtml = `
+                <div id="scmEditModal" class="modal" style="display:block">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2><i class="fas fa-edit"></i> Edit Requisition (SCM)</h2>
+                            <span class="close" onclick="closeScmEditModal()">&times;</span>
+                        </div>
+                        <form id="scmEditForm">
+                            <input type="hidden" id="scmEditRequisitionId" value="${req.Requisition_ID}">
+                            <div class="form-group">
+                                <label>Workorder No.</label>
+                                <input type="text" id="scmEditWorkorderNo" value="${escapeHtml(req.Workorder_No || '')}">
+                            </div>
+                            <div class="form-group">
+                                <label>Expected Handover Date</label>
+                                <input type="date" id="scmEditExpectedHandoverDate" value="${req.Expected_Handover_Date || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Execution Start Date</label>
+                                <input type="date" id="scmEditExecutionStartDate" value="${req.Execution_Start_Date || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Execution End Date</label>
+                                <input type="date" id="scmEditExecutionEndDate" value="${req.Execution_End_Date || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Executing Party</label>
+                                <input type="text" id="scmEditExecutingParty" value="${escapeHtml(req.Executing_Party || '')}">
+                            </div>
+                            <div class="form-group">
+                                <label>Billing Date</label>
+                                <input type="date" id="scmEditBillingDate" value="${req.Billing_Date || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>MKT Status</label>
+                                <select id="scmEditMKTStatus">
+                                    <option value="Pending" ${req.MKT_Status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Approved" ${req.MKT_Status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                    <option value="Rejected" ${req.MKT_Status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                    <option value="In Progress" ${req.MKT_Status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Completed" ${req.MKT_Status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="scmEditRemarks" rows="3">${escapeHtml(req.Remarks || '')}</textarea>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeScmEditModal()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('scmEditForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const requisitionId = document.getElementById('scmEditRequisitionId').value;
+                const updates = {
+                    Workorder_No: document.getElementById('scmEditWorkorderNo').value,
+                    Expected_Handover_Date: document.getElementById('scmEditExpectedHandoverDate').value,
+                    Execution_Start_Date: document.getElementById('scmEditExecutionStartDate').value,
+                    Execution_End_Date: document.getElementById('scmEditExecutionEndDate').value,
+                    Executing_Party: document.getElementById('scmEditExecutingParty').value,
+                    Billing_Date: document.getElementById('scmEditBillingDate').value,
+                    MKT_Status: document.getElementById('scmEditMKTStatus').value,
+                    Remarks: document.getElementById('scmEditRemarks').value
+                };
+                
+                const result = await callAPI('updateScmRequisition', { requisitionId, updates });
+                if (result.success) {
+                    alert('Requisition updated successfully!');
+                    closeScmEditModal();
+                    loadScmData();
+                    loadScmStats();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            });
+        }
+
+        function closeScmEditModal() {
+            const modal = document.getElementById('scmEditModal');
+            if (modal) modal.remove();
+        }
+
+        // ==================== RM & AM FUNCTIONS ====================
+        let currentRegionalRequisitions = [];
+        let regionalSortColumn = 'Requisition_ID';
+        let regionalSortDirection = 'desc';
+        let regionalExecutionStatusOptions = [];
+
+        async function loadRegionalData() {
+            const tableContainer = document.getElementById('regionalRequisitionsTable');
+            tableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+            
+            try {
+                const result = await callAPI('getRegionalRequisitions', {});
+                if (result.error) {
+                    if (result.error === 'Unauthorized') logout();
+                    throw new Error(result.error);
+                }
+                currentRegionalRequisitions = result.requisitions || [];
+                regionalExecutionStatusOptions = result.executionStatuses || [];
+                
+                populateRegionalFilters();
+                updateRegionalStats(result.stats, result.executionStats);
+                applyRegionalFilters();
+            } catch (error) {
+                tableContainer.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><button onclick="loadRegionalData()" class="btn btn-primary">Retry</button></div>`;
+            }
+        }
+
+        async function loadRegionalStats() {
+            try {
+                const result = await callAPI('getRegionalStats', {});
+                if (result.success) {
+                    updateRegionalStats(result.stats, {});
+                }
+            } catch (error) { console.error('Error loading regional stats:', error); }
+        }
+
+        function updateRegionalStats(stats, executionStats) {
+            let executionStatsHtml = '';
+            
+            // Display Execution Status stats only
+            const statusOrder = ['Executed', 'Final Phase', 'Yet to Start', 'Middle Phase', 'Design Phase', 'Initial Phase'];
+            
+            // First show Total
+            executionStatsHtml += `<div class="stat-card" onclick="filterRegionalByExecutionStatus('')"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-info"><h3>Total</h3><div class="stat-number">${stats.total || 0}</div></div></div>`;
+            
+            // Then show Execution Status in specific order
+            for (const status of statusOrder) {
+                if (executionStats && executionStats[status]) {
+                    executionStatsHtml += `<div class="stat-card" onclick="filterRegionalByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${executionStats[status]}</div></div></div>`;
+                }
+            }
+            
+            // Show any remaining statuses
+            if (executionStats) {
+                for (const [status, count] of Object.entries(executionStats)) {
+                    if (!statusOrder.includes(status) && status !== 'Unknown') {
+                        executionStatsHtml += `<div class="stat-card" onclick="filterRegionalByExecutionStatus('${status}')"><div class="stat-icon"><i class="fas fa-chart-simple"></i></div><div class="stat-info"><h3>${escapeHtml(status)}</h3><div class="stat-number">${count}</div></div></div>`;
+                    }
+                }
+            }
+            
+            document.getElementById('regionalStatsContainer').innerHTML = `
+                ${executionStatsHtml}
+                <div class="stat-card" onclick="filterRegionalByAuditFilter('needs_revision')"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>Need Revision</h3><div class="stat-number">${stats.needRevision || 0}</div></div></div>
+                <div class="stat-card" onclick="filterRegionalByAuditFilter('resolved')"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h3>Resolved</h3><div class="stat-number">${stats.resolved || 0}</div></div></div>
+            `;
+        }
+
+        function populateRegionalFilters() {
+            const statusSelect = document.getElementById('regionalStatusFilter');
+            statusSelect.innerHTML = '<option value="">All</option>';
+            regionalExecutionStatusOptions.forEach(status => { statusSelect.innerHTML += `<option value="${status}">${status}</option>`; });
+            
+            const fySet = new Set();
+            currentRegionalRequisitions.forEach(req => { if (req.ALL_FY && req.ALL_FY.trim()) fySet.add(req.ALL_FY); });
+            const fySelect = document.getElementById('regionalFyFilter');
+            fySelect.innerHTML = '<option value="">All FY</option>';
+            Array.from(fySet).sort().reverse().forEach(fy => { fySelect.innerHTML += `<option value="${fy}">${fy}</option>`; });
+            
+            const typeSet = new Set();
+            currentRegionalRequisitions.forEach(req => { if (req.Type && req.Type.trim()) typeSet.add(req.Type); });
+            const typeSelect = document.getElementById('regionalTypeFilter');
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+            Array.from(typeSet).sort().forEach(type => { typeSelect.innerHTML += `<option value="${type}">${type}</option>`; });
+        }
+
+        function filterRegionalByExecutionStatus(status) {
+            document.getElementById('regionalStatusFilter').value = status;
+            applyRegionalFilters();
+        }
+
+        function filterRegionalByAuditFilter(filter) {
+            document.getElementById('regionalAuditFilter').value = filter;
+            applyRegionalFilters();
+        }
+
+        function applyRegionalFilters() {
+            const searchTerm = document.getElementById('regionalSearchInput').value.toLowerCase();
+            const fyFilter = document.getElementById('regionalFyFilter').value;
+            const typeFilter = document.getElementById('regionalTypeFilter').value;
+            const statusFilter = document.getElementById('regionalStatusFilter').value;
+            const auditFilter = document.getElementById('regionalAuditFilter').value;
+            
+            let filtered = currentRegionalRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'needs_revision' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+            
+            filtered.sort((a, b) => {
+                let valA = a[regionalSortColumn] || '';
+                let valB = b[regionalSortColumn] || '';
+                return regionalSortDirection === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
+            });
+            
+            renderRegionalTable(filtered);
+        }
+
+        function sortRegional(column) {
+            if (regionalSortColumn === column) { regionalSortDirection = regionalSortDirection === 'asc' ? 'desc' : 'asc'; }
+            else { regionalSortColumn = column; regionalSortDirection = 'asc'; }
+            applyRegionalFilters();
+        }
+
+        function renderRegionalTable(requisitions) {
+            const tableContainer = document.getElementById('regionalRequisitionsTable');
+            if (!requisitions.length) { tableContainer.innerHTML = '<div class="no-data"><i class="fas fa-folder-open"></i><p>No data found</p></div>'; return; }
+            
+            let html = '<table class="data-table"><thead><tr>';
+            html += '<th onclick="sortRegional(\'Requisition_ID\')">ID ' + (regionalSortColumn === 'Requisition_ID' ? (regionalSortDirection === 'asc' ? '↑' : '↓') : '') + '</th>';
+            html += '<th onclick="sortRegional(\'ALL_FY\')">FY</th><th onclick="sortRegional(\'Type\')">Type</th><th onclick="sortRegional(\'Job_Type\')">Job Type</th>';
+            html += '<th onclick="sortRegional(\'Shop_Name\')">Shop Name</th><th>Brand</th><th>Region</th><th>Area</th>';
+            html += '<th onclick="sortRegional(\'Execution_Status\')">Status</th><th>Pre-Audit</th><th>Post-Audit</th><th>Resolution</th><th>Actions</th>';
+            html += '</thead><tbody>';
+            
+            for (const req of requisitions) {
+                const preStatus = req.Pre_Audit_FeedBack ? 'Done' : (req.canPreAudit ? 'Pending' : 'N/A');
+                const postStatus = req.Post_Audit_FeedBack ? 'Done' : 'Pending';
+                const preClass = req.Pre_Audit_FeedBack ? 'badge-info' : (req.canPreAudit ? 'badge-warning' : 'badge-danger');
+                const postClass = req.Post_Audit_FeedBack ? 'badge-info' : 'badge-warning';
+                const resolutionStatus = req.isResolved ? '<span class="badge badge-success">Resolved</span>' : (req.needsRevision ? '<span class="badge badge-warning">Needs Revision</span>' : '<span class="badge badge-info">No Action</span>');
+                
+                html += `<tr>
+                    <td><strong>${escapeHtml(req.Requisition_ID || '')}</strong></td>
+                    <td><span class="badge badge-primary">${escapeHtml(req.ALL_FY || '-')}</span></td>
+                    <td>${escapeHtml(req.Type || '-')}</td>
+                    <td>${escapeHtml(req.Job_Type || '-')}</td>
+                    <td>${escapeHtml(req.Shop_Name || '')}</td>
+                    <td>${escapeHtml(req.Brand || '')}</td>
+                    <td>${escapeHtml(req.Region || '')}</td>
+                    <td>${escapeHtml(req.Area || '')}</td>
+                    <td><span class="badge ${req.Execution_Status === 'Executed' ? 'badge-success' : 'badge-info'}">${escapeHtml(req.Execution_Status || '')}</span></td>
+                    <td><span class="badge ${preClass}">${preStatus}</span></td>
+                    <td><span class="badge ${postClass}">${postStatus}</span></td>
+                    <td>${resolutionStatus}</td>
+                    <td>
+                        <button class="btn btn-outline" onclick="showDetails('${escapeHtml(req.Requisition_ID)}')" title="Details"><i class="fas fa-info-circle"></i></button>
+                        ${req.isResolved ? `<button class="btn btn-success" onclick="viewResolution('${escapeHtml(req.Requisition_ID)}')" title="View Resolution"><i class="fas fa-check-double"></i></button>` : ''}
+                    </div>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            tableContainer.innerHTML = html;
+        }
 
         // ==================== COMMON FUNCTIONS ====================
         function showDetails(requisitionId) {
@@ -1142,6 +2047,268 @@
         function closeDetailsModal() { document.getElementById('detailsModal').style.display = 'none'; }
         function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
+        // ==================== EXCEL DOWNLOAD FUNCTION ====================
+        async function downloadExcel() {
+            try {
+                const btn = document.getElementById('downloadBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+                btn.disabled = true;
+                
+                // Get current filtered data based on role
+                let requisitionsToExport = [];
+                
+                if (currentUserRole === 'Audit') {
+                    // Get currently filtered requisitions from Audit
+                    requisitionsToExport = getCurrentAuditFilteredData();
+                } else if (currentUserRole === 'Marketing') {
+                    // Get currently filtered requisitions from Marketing
+                    requisitionsToExport = getCurrentMarketingFilteredData();
+                } else if (currentUserRole === 'Head_Of_Sales') {
+                    // Get currently filtered requisitions from Head of Sales
+                    requisitionsToExport = getCurrentHosFilteredData();
+                }else if (currentUserRole === 'SCM') {
+                    requisitionsToExport = getCurrentScmFilteredData();
+                }else if (currentUserRole === 'RM' || currentUserRole === 'AM') {
+                    requisitionsToExport = getCurrentRegionalFilteredData();
+                }
+                
+                if (requisitionsToExport.length === 0) {
+                    alert('No data to export. Please check your filters.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                const result = await callAPI('exportToExcel', { 
+                    requisitions: requisitionsToExport,
+                    role: currentUserRole 
+                });
+                
+                if (result.success && result.downloadUrl) {
+                    // Open download link in new tab
+                    window.open(result.downloadUrl, '_blank');
+                    alert(`✅ Export successful!\n\n${result.rowCount} records exported.\nThe file is being downloaded.`);
+                    
+                    // Clean up: Delete the temporary file after download (optional)
+                    setTimeout(async () => {
+                        await callAPI('cleanupExportFile', { fileId: result.fileId });
+                    }, 5000);
+                } else {
+                    alert('Error exporting data: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error downloading file: ' + error.message);
+            } finally {
+                const btn = document.getElementById('downloadBtn');
+                btn.innerHTML = '<i class="fas fa-download"></i> Download Excel';
+                btn.disabled = false;
+            }
+        }
+
+        // Helper functions to get current filtered data based on role
+        function getCurrentAuditFilteredData() {
+            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const fyFilter = document.getElementById('fyFilter')?.value || '';
+            const typeFilter = document.getElementById('typeFilter')?.value || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            const auditFilter = document.getElementById('auditFilter')?.value || '';
+            
+            return currentRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'audit_done' && !req.Pre_Audit_FeedBack && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+        }
+
+        function getCurrentMarketingFilteredData() {
+            const searchTerm = document.getElementById('marketingSearchInput')?.value.toLowerCase() || '';
+            const fyFilter = document.getElementById('marketingFyFilter')?.value || '';
+            const typeFilter = document.getElementById('marketingTypeFilter')?.value || '';
+            const statusFilter = document.getElementById('marketingStatusFilter')?.value || '';
+            const auditFilter = document.getElementById('marketingAuditFilter')?.value || '';
+            
+            return currentMarketingRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                if (auditFilter === 'pending_revisions' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+        }
+
+        function getCurrentHosFilteredData() {
+            const searchTerm = document.getElementById('hosSearchInput')?.value.toLowerCase() || '';
+            const fyFilter = document.getElementById('hosFyFilter')?.value || '';
+            const typeFilter = document.getElementById('hosTypeFilter')?.value || '';
+            const regionFilter = document.getElementById('hosRegionFilter')?.value || '';
+            const statusFilter = document.getElementById('hosStatusFilter')?.value || '';
+            const auditFilter = document.getElementById('hosAuditFilter')?.value || '';
+            
+            return currentHosRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (regionFilter && req.Region !== regionFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'audit_done' && !req.Pre_Audit_FeedBack && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+        }
+        function getCurrentScmFilteredData() {
+            const searchTerm = document.getElementById('scmSearchInput')?.value.toLowerCase() || '';
+            const fyFilter = document.getElementById('scmFyFilter')?.value || '';
+            const typeFilter = document.getElementById('scmTypeFilter')?.value || '';
+            const regionFilter = document.getElementById('scmRegionFilter')?.value || '';
+            const areaFilter = document.getElementById('scmAreaFilter')?.value || '';
+            const statusFilter = document.getElementById('scmStatusFilter')?.value || '';
+            const mktStatusFilter = document.getElementById('scmMktStatusFilter')?.value || '';
+            const auditFilter = document.getElementById('scmAuditFilter')?.value || '';
+            
+            return currentScmRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (regionFilter && req.Region !== regionFilter) return false;
+                if (areaFilter && req.Area !== areaFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                if (mktStatusFilter && req.MKT_Status !== mktStatusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'needs_revision' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+        }
+        function getCurrentRegionalFilteredData() {
+            const searchTerm = document.getElementById('regionalSearchInput')?.value.toLowerCase() || '';
+            const fyFilter = document.getElementById('regionalFyFilter')?.value || '';
+            const typeFilter = document.getElementById('regionalTypeFilter')?.value || '';
+            const statusFilter = document.getElementById('regionalStatusFilter')?.value || '';
+            const auditFilter = document.getElementById('regionalAuditFilter')?.value || '';
+            
+            return currentRegionalRequisitions.filter(req => {
+                if (searchTerm && !req.Requisition_ID?.toLowerCase().includes(searchTerm) && !req.Shop_Name?.toLowerCase().includes(searchTerm)) return false;
+                if (fyFilter && req.ALL_FY !== fyFilter) return false;
+                if (typeFilter && req.Type !== typeFilter) return false;
+                if (statusFilter && req.Execution_Status !== statusFilter) return false;
+                
+                if (auditFilter === 'pending_pre' && (req.Pre_Audit_FeedBack || !req.canPreAudit)) return false;
+                if (auditFilter === 'completed_pre' && !req.Pre_Audit_FeedBack) return false;
+                if (auditFilter === 'pending_post' && (req.Post_Audit_FeedBack || !req.canPostAudit)) return false;
+                if (auditFilter === 'completed_post' && !req.Post_Audit_FeedBack) return false;
+                if (auditFilter === 'needs_revision' && !req.needsRevision) return false;
+                if (auditFilter === 'resolved' && !req.isResolved) return false;
+                return true;
+            });
+        }
+
+        // ==================== PASSWORD CHANGE FUNCTIONS ====================
+
+        function openPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'block';
+            document.getElementById('passwordForm').reset();
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('passwordSuccess').style.display = 'none';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        async function changePassword(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            const errorDiv = document.getElementById('passwordError');
+            const successDiv = document.getElementById('passwordSuccess');
+            
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // Validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> All fields are required.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> New password and confirm password do not match.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword.length < 3) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> New password must be at least 3 characters long.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            try {
+                const result = await callAPI('changePassword', {
+                    currentPassword: currentPassword,
+                    newPassword: newPassword,
+                    confirmPassword: confirmPassword
+                });
+                
+                if (result.success) {
+                    successDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
+                    successDiv.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('passwordForm').reset();
+                    
+                    // Auto logout after 3 seconds
+                    setTimeout(() => {
+                        closePasswordModal();
+                        alert('Please login again with your new password.');
+                        logout();
+                    }, 3000);
+                } else {
+                    errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + result.error;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error: ' + error.message;
+                errorDiv.style.display = 'block';
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+
+
         // Event listeners
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
         document.getElementById('searchInput').addEventListener('input', applyAuditFilters);
@@ -1154,8 +2321,32 @@
         document.getElementById('marketingTypeFilter').addEventListener('change', applyMarketingFilters);
         document.getElementById('marketingStatusFilter').addEventListener('change', applyMarketingFilters);
         document.getElementById('marketingAuditFilter').addEventListener('change', applyMarketingFilters);
+        document.getElementById('hosSearchInput').addEventListener('input', applyHosFilters);
+        document.getElementById('hosFyFilter').addEventListener('change', applyHosFilters);
+        document.getElementById('hosTypeFilter').addEventListener('change', applyHosFilters);
+        document.getElementById('hosRegionFilter').addEventListener('change', applyHosFilters);
+        document.getElementById('hosStatusFilter').addEventListener('change', applyHosFilters);
+        document.getElementById('hosAuditFilter').addEventListener('change', applyHosFilters);
+        document.getElementById('scmSearchInput').addEventListener('input', applyScmFilters);
+        document.getElementById('scmFyFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmTypeFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmRegionFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmAreaFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmStatusFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmMktStatusFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('scmAuditFilter').addEventListener('change', applyScmFilters);
+        document.getElementById('regionalSearchInput').addEventListener('input', applyRegionalFilters);
+        document.getElementById('regionalFyFilter').addEventListener('change', applyRegionalFilters);
+        document.getElementById('regionalTypeFilter').addEventListener('change', applyRegionalFilters);
+        document.getElementById('regionalStatusFilter').addEventListener('change', applyRegionalFilters);
+        document.getElementById('regionalAuditFilter').addEventListener('change', applyRegionalFilters);
+        document.getElementById('passwordForm').addEventListener('submit', changePassword);
         
         window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target === modal) {
+                closePasswordModal();
+            }
             if (event.target === document.getElementById('auditModal')) closeModal();
             if (event.target === document.getElementById('detailsModal')) closeDetailsModal();
             if (event.target === document.getElementById('developerModal')) closeDeveloperModal();
